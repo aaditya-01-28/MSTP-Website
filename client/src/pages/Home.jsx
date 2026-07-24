@@ -8,7 +8,7 @@ import {
 import './Home.css';
 
 // Hero Slider Assets
-import heroVideo from '../assets/home/Hero Section.mp4';
+import heroVideo from '../assets/home/Hero Section2.mp4';
 import slider1 from '../assets/home/slider1.png';
 import slider2 from '../assets/home/slider2.png';
 import slider3 from '../assets/home/slider3.png';
@@ -163,6 +163,15 @@ const Home = () => {
                   />
                 )
               ))}
+
+              {/* Hero Text Overlay (Fixed on first slider only) */}
+              {currentSlide === 0 && (
+                <div className="hero-text-overlay">
+                  <h1 className="hero-title">
+                    MAATRSHRI AI-DRIVEN<br />IT SOLUTIONS
+                  </h1>
+                </div>
+              )}
 
               {/* Navigation Dots */}
               <div className="slider-dots">

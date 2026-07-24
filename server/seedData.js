@@ -5,6 +5,8 @@ const Testimonial = require('./models/Testimonial');
 const TeamMember = require('./models/TeamMember');
 const SiteSettings = require('./models/SiteSettings');
 const Admin = require('./models/Admin');
+const Contact = require('./models/Contact');
+const Application = require('./models/Application');
 const bcrypt = require('bcryptjs');
 
 const initialServices = [
@@ -372,21 +374,71 @@ const seedDatabase = async () => {
           whatsapp: 'https://wa.me/message/4BLHTNLKXWDKG1'
         },
         aboutUsText: 'At MAATRSHRI, we are more than just a technology provider; we are architects of the digital future. We have partnered with global enterprises to solve complex business challenges through cutting-edge IT solutions, strategic consulting, and robust engineering.',
-        privacyPolicy: `At MAATRSHRI Group, we take your privacy seriously. This Privacy Policy describes how your personal information is collected, used, and shared when you visit or make a purchase from our website.
-
-1. Information We Collect
-When you visit the Site, we automatically collect certain information about your device, including web browser, IP address, and time zone.
-
-2. How We Use Your Information
-We use the information to fulfill orders, communicate with you, and screen for potential risk or fraud.
-
-3. Sharing Your Personal Information
-We share your Personal Information with third parties to help us use your Personal Information as described above.
-
-4. Contact Us
-For more information about our privacy practices, contact us by email at hr@maatrshrigroup.in.`
+        privacyPolicy: `At MAATRSHRI Group, we take your privacy seriously. This Privacy Policy describes how your personal information is collected, used, and shared when you visit or make a purchase from our website.`
       });
       console.log('✅ Initial Site Settings seeded into MongoDB');
+    }
+
+    // Seed Contacts
+    const contactCount = await Contact.countDocuments();
+    if (contactCount === 0) {
+      await Contact.insertMany([
+        {
+          name: 'Rahul Sharma',
+          email: 'rahul.sharma@gmail.com',
+          subject: 'Web Development Inquiry',
+          message: 'Hello MAATRSHRI team, we are looking for a full stack web development agency for our e-commerce platform.',
+          submittedAt: new Date()
+        },
+        {
+          name: 'Priya Verma',
+          email: 'priya.verma@techsolutions.com',
+          subject: 'AI & Cloud Consulting',
+          message: 'Hi, I would like to schedule a consultation regarding DevOps and Cloud hosting options for our enterprise app.',
+          submittedAt: new Date()
+        }
+      ]);
+      console.log('✅ Initial Contact Inquiries seeded into MongoDB');
+    }
+
+    // Seed Applications
+    const appCount = await Application.countDocuments();
+    if (appCount === 0) {
+      await Application.insertMany([
+        {
+          jobTitle: 'Software developer (SDE-1)',
+          jobId: '100',
+          firstName: 'Amit',
+          lastName: 'Patel',
+          email: 'amit.patel@example.com',
+          countryCode: '+91',
+          phone: '9876543210',
+          country: 'India',
+          city: 'Bhopal',
+          resumeName: 'Amit_Patel_Resume.pdf',
+          coverLetter: 'I am a passionate software engineer with 1.5 years experience in Java, Spring Boot, and React. Looking forward to joining MAATRSHRI Group!',
+          githubUrl: 'https://github.com/amitpatel',
+          linkedinUrl: 'https://linkedin.com/in/amitpatel',
+          appliedAt: new Date()
+        },
+        {
+          jobTitle: 'Frontend developer',
+          jobId: '102',
+          firstName: 'Neha',
+          lastName: 'Singh',
+          email: 'neha.singh@example.com',
+          countryCode: '+91',
+          phone: '8765432109',
+          country: 'India',
+          city: 'Indore',
+          resumeName: 'Neha_Singh_Frontend.pdf',
+          coverLetter: 'Experienced frontend developer proficient in React, Next.js, and CSS design systems. Excited to apply for the Frontend Developer role.',
+          githubUrl: 'https://github.com/nehasingh',
+          linkedinUrl: 'https://linkedin.com/in/nehasingh',
+          appliedAt: new Date()
+        }
+      ]);
+      console.log('✅ Initial Job Applications seeded into MongoDB');
     }
   } catch (error) {
     console.error('Error seeding database:', error);

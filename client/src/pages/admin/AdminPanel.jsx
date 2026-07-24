@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Briefcase, Layers, Folder, MessageSquare, Users, Settings, LogOut, FileText, Mail } from 'lucide-react';
+import { 
+  Briefcase, Layers, Folder, MessageSquare, Users, Settings, LogOut, 
+  FileText, Mail, Globe, ChevronDown, ChevronRight 
+} from 'lucide-react';
 import './AdminPanel.css';
 
 import CareersTab from './tabs/CareersTab';
@@ -14,6 +17,7 @@ import ContactsTab from './tabs/ContactsTab';
 
 const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState('applications');
+  const [isWebsiteMgmtOpen, setIsWebsiteMgmtOpen] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,18 +32,39 @@ const AdminPanel = () => {
     navigate('/admin/login');
   };
 
-  const tabs = [
-    { id: 'applications', name: 'Job Applications', icon: <FileText size={18}/>, component: ApplicationsTab },
-    { id: 'contacts', name: 'Contact Inquiries', icon: <Mail size={18}/>, component: ContactsTab },
-    { id: 'careers', name: 'Careers', icon: <Briefcase size={18}/>, component: CareersTab },
-    { id: 'services', name: 'Services', icon: <Layers size={18}/>, component: ServicesTab },
-    { id: 'portfolio', name: 'Portfolio', icon: <Folder size={18}/>, component: PortfolioTab },
-    { id: 'testimonials', name: 'Testimonials', icon: <MessageSquare size={18}/>, component: TestimonialsTab },
-    { id: 'team', name: 'Leadership Team', icon: <Users size={18}/>, component: TeamTab },
-    { id: 'settings', name: 'Site Settings', icon: <Settings size={18}/>, component: SettingsTab },
+  const isWebsiteMgmtTab = ['careers', 'services', 'portfolio', 'testimonials', 'team', 'settings'].includes(activeTab);
+
+  const websiteSubTabs = [
+    { id: 'careers', name: 'Careers', icon: <Briefcase size={16}/>, component: CareersTab },
+    { id: 'services', name: 'Services', icon: <Layers size={16}/>, component: ServicesTab },
+    { id: 'portfolio', name: 'Portfolio', icon: <Folder size={16}/>, component: PortfolioTab },
+    { id: 'testimonials', name: 'Testimonials', icon: <MessageSquare size={16}/>, component: TestimonialsTab },
+    { id: 'team', name: 'Leadership Team', icon: <Users size={16}/>, component: TeamTab },
+    { id: 'settings', name: 'Site Settings', icon: <Settings size={16}/>, component: SettingsTab },
   ];
 
-  const ActiveComponent = tabs.find(t => t.id === activeTab)?.component || CareersTab;
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'applications':
+        return <ApplicationsTab />;
+      case 'contacts':
+        return <ContactsTab />;
+      case 'careers':
+        return <CareersTab />;
+      case 'services':
+        return <ServicesTab />;
+      case 'portfolio':
+        return <PortfolioTab />;
+      case 'testimonials':
+        return <TestimonialsTab />;
+      case 'team':
+        return <TeamTab />;
+      case 'settings':
+        return <SettingsTab />;
+      default:
+        return <ApplicationsTab />;
+    }
+  };
 
   return (
     <div className="admin-layout">
@@ -49,25 +74,87 @@ const AdminPanel = () => {
           <img src="/logo.jpeg" alt="MAATRSHRI Logo" className="admin-sidebar-logo" />
           <h2>MAATRSHRI Admin</h2>
         </div>
+
         <nav className="admin-nav">
-          {tabs.map(tab => (
+          {/* 1. Job Applications Tab */}
+          <button
+            className={`admin-nav-btn ${activeTab === 'applications' ? 'active' : ''}`}
+            onClick={() => setActiveTab('applications')}
+          >
+            <FileText size={18} /> Job Applications
+          </button>
+
+          {/* 2. Contact Inquiries Tab */}
+          <button
+            className={`admin-nav-btn ${activeTab === 'contacts' ? 'active' : ''}`}
+            onClick={() => setActiveTab('contacts')}
+          >
+            <Mail size={18} /> Contact Inquiries
+          </button>
+
+          {/* 3. Website Management Group */}
+          <div className="nav-group">
             <button
-              key={tab.id}
-              className={`admin-nav-btn ${activeTab === tab.id ? 'active' : ''}`}
-              onClick={() => setActiveTab(tab.id)}
+              className={`admin-nav-btn nav-group-btn ${isWebsiteMgmtTab ? 'active-group' : ''}`}
+              onClick={() => {
+                setIsWebsiteMgmtOpen(!isWebsiteMgmtOpen);
+                if (!isWebsiteMgmtTab) {
+                  setActiveTab('careers');
+                }
+              }}
             >
-              {tab.icon} {tab.name}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1 }}>
+                <Globe size={18} /> Website Management
+              </div>
+              {isWebsiteMgmtOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
             </button>
-          ))}
+
+            {isWebsiteMgmtOpen && (
+              <div className="sub-nav-list">
+                {websiteSubTabs.map(subTab => (
+                  <button
+                    key={subTab.id}
+                    className={`sub-nav-btn ${activeTab === subTab.id ? 'active' : ''}`}
+                    onClick={() => setActiveTab(subTab.id)}
+                  >
+                    {subTab.icon} {subTab.name}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </nav>
+
         <button className="admin-logout-btn" onClick={handleLogout}>
-          <LogOut size={16} style={{display: 'inline', marginRight: '5px', verticalAlign: 'middle'}}/> Logout
+          <LogOut size={16} style={{ display: 'inline', marginRight: '5px', verticalAlign: 'middle' }} /> Logout
         </button>
       </aside>
 
       {/* Main Content */}
       <main className="admin-content">
-        <ActiveComponent />
+        {/* If inside Website Management, render sub-tab navigation bar */}
+        {isWebsiteMgmtTab && (
+          <div className="website-mgmt-bar">
+            <div className="mgmt-title">
+              <span>🌐 Website Management</span>
+            </div>
+            <div className="mgmt-subtabs">
+              {websiteSubTabs.map(tab => (
+                <button
+                  key={tab.id}
+                  className={`mgmt-subtab-btn ${activeTab === tab.id ? 'active' : ''}`}
+                  onClick={() => setActiveTab(tab.id)}
+                >
+                  {tab.icon} {tab.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="admin-tab-body">
+          {renderContent()}
+        </div>
       </main>
     </div>
   );
