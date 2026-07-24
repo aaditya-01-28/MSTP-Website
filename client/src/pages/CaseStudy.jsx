@@ -14,6 +14,25 @@ import satoshiGif from '../assets/portfolio/STF Gold.gif';
 import rccmGif from '../assets/portfolio/BCCM Global_A2.gif';
 import samraatGif from '../assets/portfolio/SAMRAAT LOGS_ A1.gif';
 
+import figmaImg from '../assets/tech_logo/figma.png';
+import reactImg from '../assets/tech_logo/react.png';
+import nodeImg from '../assets/tech_logo/node.png';
+import mongoImg from '../assets/tech_logo/mongodb.png';
+import awsImg from '../assets/tech_logo/aws.png';
+import dockerImg from '../assets/tech_logo/docker.png';
+import defaultUserImg from '../assets/contactus/user.png';
+
+const localTechIcons = {
+  'figma': figmaImg,
+  'react': reactImg,
+  'node': nodeImg,
+  'node.js': nodeImg,
+  'nodejs': nodeImg,
+  'mongodb': mongoImg,
+  'aws': awsImg,
+  'docker': dockerImg
+};
+
 const localPortfolioImages = {
   'ekatr': ekatrGif,
   'consta': constaGif,
@@ -126,18 +145,21 @@ const CaseStudy = () => {
         <div className="cs-section">
           <h2 className="cs-section-title"><span className="highlight-green">03.</span> Tools Used</h2>
           <div className="cs-tools-grid">
-            {project.tools && project.tools.map((tool, idx) => (
-              <div className="tool-box" key={idx}>
-                {tool.icon ? (
-                  <img src={tool.icon} alt={tool.name} style={{width: '70px', height: '70px', objectFit: 'contain', marginBottom: '0.5rem'}} />
-                ) : (
-                  <div className="tool-logo-placeholder">
-                    {tool.name.charAt(0)}
-                  </div>
-                )}
-                <span>{tool.name}</span>
-              </div>
-            ))}
+            {project.tools && project.tools.map((tool, idx) => {
+              const toolIcon = tool.icon || localTechIcons[tool.name?.toLowerCase()];
+              return (
+                <div className="tool-box" key={idx}>
+                  {toolIcon ? (
+                    <img src={toolIcon} alt={tool.name} style={{width: '60px', height: '60px', objectFit: 'contain', marginBottom: '0.5rem'}} />
+                  ) : (
+                    <div className="tool-logo-placeholder">
+                      {tool.name ? tool.name.charAt(0) : 'T'}
+                    </div>
+                  )}
+                  <span>{tool.name}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
 
@@ -153,7 +175,11 @@ const CaseStudy = () => {
                 "{project.testimonial.text}"
               </p>
               <div className="cs-testimonial-author">
-                <img src={project.testimonial.avatar} alt={project.testimonial.author} className="author-avatar" />
+                <img 
+                  src={(project.testimonial.avatar && project.testimonial.avatar.trim() !== '') ? project.testimonial.avatar : defaultUserImg} 
+                  alt={project.testimonial.author} 
+                  className="author-avatar" 
+                />
                 <div className="author-info">
                   <h4>{project.testimonial.author}</h4>
                   <span>{project.testimonial.role}</span>
