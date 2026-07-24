@@ -8,13 +8,15 @@ const Portfolio = require('../models/Portfolio');
 const Testimonial = require('../models/Testimonial');
 const TeamMember = require('../models/TeamMember');
 const SiteSettings = require('../models/SiteSettings');
+const Contact = require('../models/Contact');
+const Application = require('../models/Application');
 
 // Helper to create CRUD routes for a given model
 const createCrudRoutes = (model, pathName) => {
   // Public GET all
   router.get(`/${pathName}`, async (req, res) => {
     try {
-      const items = await model.find();
+      const items = await model.find().sort({ createdAt: -1 });
       res.json(items);
     } catch (err) {
       res.status(500).json({ error: 'Server Error' });
@@ -70,6 +72,8 @@ createCrudRoutes(Service, 'services');
 createCrudRoutes(Portfolio, 'portfolios');
 createCrudRoutes(Testimonial, 'testimonials');
 createCrudRoutes(TeamMember, 'team');
+createCrudRoutes(Contact, 'contacts');
+createCrudRoutes(Application, 'applications');
 
 // Special route for SiteSettings (Singleton)
 router.get('/settings', async (req, res) => {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Briefcase, Layers, Folder, MessageSquare, Users, Settings, LogOut } from 'lucide-react';
+import { Briefcase, Layers, Folder, MessageSquare, Users, Settings, LogOut, FileText, Mail } from 'lucide-react';
 import './AdminPanel.css';
 
 import CareersTab from './tabs/CareersTab';
@@ -9,9 +9,11 @@ import PortfolioTab from './tabs/PortfolioTab';
 import TestimonialsTab from './tabs/TestimonialsTab';
 import TeamTab from './tabs/TeamTab';
 import SettingsTab from './tabs/SettingsTab';
+import ApplicationsTab from './tabs/ApplicationsTab';
+import ContactsTab from './tabs/ContactsTab';
 
 const AdminPanel = () => {
-  const [activeTab, setActiveTab] = useState('careers');
+  const [activeTab, setActiveTab] = useState('applications');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,6 +29,8 @@ const AdminPanel = () => {
   };
 
   const tabs = [
+    { id: 'applications', name: 'Job Applications', icon: <FileText size={18}/>, component: ApplicationsTab },
+    { id: 'contacts', name: 'Contact Inquiries', icon: <Mail size={18}/>, component: ContactsTab },
     { id: 'careers', name: 'Careers', icon: <Briefcase size={18}/>, component: CareersTab },
     { id: 'services', name: 'Services', icon: <Layers size={18}/>, component: ServicesTab },
     { id: 'portfolio', name: 'Portfolio', icon: <Folder size={18}/>, component: PortfolioTab },

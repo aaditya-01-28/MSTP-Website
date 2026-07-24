@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { API_BASE_URL } from '../../../apiConfig';
+import { exportToExcel } from '../../../utils/exportToExcel';
 
 const ServicesTab = () => {
   const [services, setServices] = useState([]);
@@ -95,7 +96,12 @@ const ServicesTab = () => {
     <div>
       <div className="admin-header">
         <h2>Manage Services</h2>
-        <button onClick={() => handleOpenModal()} className="btn btn-primary">Add New Service</button>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button onClick={() => exportToExcel(services, 'Services_Data')} className="btn btn-outline" style={{ borderColor: '#10b981', color: '#10b981' }}>
+            📊 Export Excel
+          </button>
+          <button onClick={() => handleOpenModal()} className="btn btn-primary">Add New Service</button>
+        </div>
       </div>
 
       <table className="admin-table">

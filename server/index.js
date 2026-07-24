@@ -28,14 +28,7 @@ mongoose.connect(process.env.MONGO_URI)
   .catch(err => console.log("DB Error:", err));
 
 // Schema
-const contactSchema = new mongoose.Schema({
-  name: String,
-  email: String,
-  subject: String,
-  message: String
-});
-
-const Contact = mongoose.model("Contact", contactSchema);
+const Contact = require('./models/Contact');
 
 // Nodemailer Transporter Configuration
 const transporter = nodemailer.createTransport({
@@ -123,24 +116,7 @@ app.post('/api/book', async (req, res) => {
 });
 
 // Application Schema
-const applicationSchema = new mongoose.Schema({
-  jobTitle: String,
-  jobId: String,
-  firstName: String,
-  lastName: String,
-  email: String,
-  countryCode: String,
-  phone: String,
-  country: String,
-  city: String,
-  resumeName: String,
-  coverLetter: String,
-  githubUrl: String,
-  linkedinUrl: String,
-  appliedAt: { type: Date, default: Date.now }
-});
-
-const Application = mongoose.model("Application", applicationSchema);
+const Application = require('./models/Application');
 
 // 3. Careers Apply Endpoint
 app.post('/api/apply', async (req, res) => {
