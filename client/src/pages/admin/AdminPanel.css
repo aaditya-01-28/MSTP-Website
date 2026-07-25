@@ -564,3 +564,45 @@
   color: var(--text-primary);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
+
+/* Status Select Dropdowns */
+.status-select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border: 1px solid var(--border-color);
+  outline: none;
+  cursor: pointer;
+  width: 100%;
+  max-width: 120px;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.status-select.status-pending {
+  background-color: rgba(245, 158, 11, 0.12) !important;
+  color: #f59e0b !important;
+  border-color: rgba(245, 158, 11, 0.3) !important;
+}
+
+.status-select.status-shortlisted,
+.status-select.status-contacted {
+  background-color: rgba(59, 130, 246, 0.12) !important;
+  color: #3b82f6 !important;
+  border-color: rgba(59, 130, 246, 0.3) !important;
+}
+
+.status-select.status-onboarded,
+.status-select.status-completed,
+.status-select.status-update {
+  background-color: rgba(16, 185, 129, 0.12) !important;
+  color: #10b981 !important;
+  border-color: rgba(16, 185, 129, 0.3) !important;
+}
+
+.status-select.status-rejected {
+  background-color: rgba(239, 68, 68, 0.12) !important;
+  color: #ef4444 !important;
+  border-color: rgba(239, 68, 68, 0.3) !important;
+}

@@ -14,7 +14,6 @@ import slider1 from '../assets/home/slider1.png';
 import slider2 from '../assets/home/slider2.png';
 import slider3 from '../assets/home/slider3.png';
 import slider4 from '../assets/home/slider4.png';
-import slider5 from '../assets/home/slider5.gif';
 
 // Marquee Client logos
 import stfLogo from '../assets/aboutus/stf.png';
@@ -30,8 +29,7 @@ const heroSlides = [
   { type: 'image', src: slider1 },
   { type: 'image', src: slider2 },
   { type: 'image', src: slider3 },
-  { type: 'image', src: slider4 },
-  { type: 'image', src: slider5 }
+  { type: 'image', src: slider4 }
 ];
 
 const initialOverlayServices = [

@@ -177,19 +177,11 @@ const ContactsTab = () => {
                       ? new Date(item.createdAt || item.submittedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) 
                       : '-'}
                   </td>
-                  <td style={{ width: '140px' }}>
+                  <td style={{ width: '130px' }}>
                     <select 
                       value={item.status || 'Pending'} 
                       onChange={(e) => handleStatusChange(item._id, e.target.value)}
-                      style={{
-                        padding: '4px 8px',
-                        borderRadius: '4px',
-                        border: '1px solid var(--border-color)',
-                        background: 'var(--bg-secondary)',
-                        color: 'var(--text-primary)',
-                        fontSize: '0.85rem',
-                        width: '100%'
-                      }}
+                      className={`status-select status-${(item.status || 'Pending').toLowerCase()}`}
                     >
                       <option value="Pending">Pending</option>
                       <option value="Contacted">Contacted</option>
@@ -200,13 +192,13 @@ const ContactsTab = () => {
                   <td>
                     <div className="action-buttons">
                       <button className="btn-sm btn-edit" onClick={() => setReplyContact(item)} title="Reply via Email">
-                        ✉️ Reply
+                        Reply
                       </button>
                       <button className="btn-sm btn-edit" onClick={() => setSelectedContact(item)} title="View Full Message">
-                        👁️ View
+                        View
                       </button>
                       <button className="btn-sm btn-delete" onClick={() => handleDelete(item._id)} title="Delete Submission">
-                        🗑️
+                        Delete
                       </button>
                     </div>
                   </td>
