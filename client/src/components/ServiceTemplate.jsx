@@ -109,26 +109,36 @@ const processIcons = [
 const ServiceTemplate = () => {
   const { serviceId } = useParams();
   const navigate = useNavigate();
-  const [service, setService] = useState(null);
-  const [loading, setLoading] = useState(true);
+  
+  const getInitialService = (id) => {
+    return servicesData[id] ? { id, ...servicesData[id] } : null;
+  };
+
+  const [service, setService] = useState(() => getInitialService(serviceId));
+  const [loading, setLoading] = useState(!service);
 
   useEffect(() => {
+    const localData = getInitialService(serviceId);
+    if (localData) {
+      setService(localData);
+      setLoading(false);
+    }
+
     fetch(`${API_BASE_URL}/api/services`)
       .then(res => res.json())
       .then(data => {
-        const found = data.find(s => s.id === serviceId);
-        if (found) {
-          setService(found);
-        } else if (servicesData[serviceId]) {
-          setService({ id: serviceId, ...servicesData[serviceId] });
-        } else {
-          navigate('/services');
+        if (Array.isArray(data)) {
+          const found = data.find(s => s.id === serviceId || s._id === serviceId);
+          if (found) {
+            setService(found);
+          } else if (!localData) {
+            navigate('/services');
+          }
         }
       })
-      .catch(() => {
-        if (servicesData[serviceId]) {
-          setService({ id: serviceId, ...servicesData[serviceId] });
-        } else {
+      .catch(err => {
+        console.error('API fetch error:', err);
+        if (!localData) {
           navigate('/services');
         }
       })
@@ -136,7 +146,7 @@ const ServiceTemplate = () => {
   }, [serviceId, navigate]);
 
   if (loading) return <div style={{paddingTop: '120px', textAlign: 'center', minHeight: '60vh'}}>Loading service details...</div>;
-  if (!service) return null;
+  if (!service) return <div style={{paddingTop: '120px', textAlign: 'center', minHeight: '60vh'}}>Service not found.</div>;
 
   const heroImage = service.icon || localServiceIcons[service.id];
 
