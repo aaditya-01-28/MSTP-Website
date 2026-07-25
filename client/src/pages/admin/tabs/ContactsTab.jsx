@@ -7,6 +7,10 @@ const ContactsTab = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [selectedContact, setSelectedContact] = useState(null);
+  const [replyContact, setReplyContact] = useState(null);
+  const [replySubject, setReplySubject] = useState('');
+  const [replyMessage, setReplyMessage] = useState('');
+  const [sendingReply, setSendingReply] = useState(false);
 
   useEffect(() => {
     fetchContacts();
@@ -24,6 +28,51 @@ const ContactsTab = () => {
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      await fetch(`${API_BASE_URL}/api/contacts/${id}`, {
+        method: 'PUT',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('adminToken')}` 
+        },
+        body: JSON.stringify({ status: newStatus })
+      });
+      setContacts(contacts.map(item => item._id === id ? { ...item, status: newStatus } : item));
+    } catch (err) {
+      alert('Failed to update status');
+    }
+  };
+
+  const handleSendReply = async (e) => {
+    e.preventDefault();
+    setSendingReply(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/admin/reply`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('adminToken')}` 
+        },
+        body: JSON.stringify({
+          email: replyContact.email,
+          subject: replySubject,
+          message: replyMessage
+        })
+      });
+      if (res.ok) {
+        alert('Reply sent successfully!');
+        setReplyContact(null);
+      } else {
+        alert('Failed to send reply');
+      }
+    } catch (err) {
+      alert('Error sending reply');
+    } finally {
+      setSendingReply(false);
     }
   };
 
@@ -50,7 +99,7 @@ const ContactsTab = () => {
   });
 
   const handleExport = () => {
-    exportToExcel(contacts, 'Contact_Inquiries', ['name', 'email', 'subject', 'message', 'submittedAt', 'createdAt']);
+    exportToExcel(contacts, 'Contact_Inquiries', ['name', 'email', 'subject', 'message', 'status', 'submittedAt', 'createdAt']);
   };
 
   return (
@@ -110,6 +159,7 @@ const ContactsTab = () => {
                 <th>Subject</th>
                 <th>Message Preview</th>
                 <th>Date Submitted</th>
+                <th>Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -127,8 +177,31 @@ const ContactsTab = () => {
                       ? new Date(item.createdAt || item.submittedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) 
                       : '-'}
                   </td>
+                  <td style={{ width: '140px' }}>
+                    <select 
+                      value={item.status || 'Pending'} 
+                      onChange={(e) => handleStatusChange(item._id, e.target.value)}
+                      style={{
+                        padding: '4px 8px',
+                        borderRadius: '4px',
+                        border: '1px solid var(--border-color)',
+                        background: 'var(--bg-secondary)',
+                        color: 'var(--text-primary)',
+                        fontSize: '0.85rem',
+                        width: '100%'
+                      }}
+                    >
+                      <option value="Pending">Pending</option>
+                      <option value="Contacted">Contacted</option>
+                      <option value="Update">Update</option>
+                      <option value="Completed">Completed</option>
+                    </select>
+                  </td>
                   <td>
                     <div className="action-buttons">
+                      <button className="btn-sm btn-edit" onClick={() => setReplyContact(item)} title="Reply via Email">
+                        ✉️ Reply
+                      </button>
                       <button className="btn-sm btn-edit" onClick={() => setSelectedContact(item)} title="View Full Message">
                         👁️ View
                       </button>
@@ -175,6 +248,65 @@ const ContactsTab = () => {
             <div className="modal-actions" style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'flex-end' }}>
               <button className="btn btn-outline" onClick={() => setSelectedContact(null)}>Close</button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal for Custom Reply */}
+      {replyContact && (
+        <div className="modal-overlay" onClick={() => setReplyContact(null)}>
+          <div className="modal-content" onClick={e => e.stopPropagation()} style={{ maxWidth: '600px' }}>
+            <h3>Reply to {replyContact.name}</h3>
+            <p style={{ margin: '8px 0', color: 'var(--text-secondary)' }}>
+              <strong>To:</strong> {replyContact.email}
+            </p>
+            
+            <form onSubmit={handleSendReply} style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div>
+                <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '6px' }}>Subject:</label>
+                <input 
+                  type="text" 
+                  required
+                  value={replySubject}
+                  onChange={(e) => setReplySubject(e.target.value)}
+                  placeholder="Enter email subject"
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    borderRadius: '6px',
+                    border: '1px solid var(--border-color)',
+                    background: 'var(--bg-secondary)',
+                    color: 'var(--text-primary)'
+                  }}
+                />
+              </div>
+              <div>
+                <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '6px' }}>Message:</label>
+                <textarea 
+                  required
+                  value={replyMessage}
+                  onChange={(e) => setReplyMessage(e.target.value)}
+                  placeholder="Type your reply here..."
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    borderRadius: '6px',
+                    border: '1px solid var(--border-color)',
+                    background: 'var(--bg-secondary)',
+                    color: 'var(--text-primary)',
+                    minHeight: '150px',
+                    resize: 'vertical'
+                  }}
+                />
+              </div>
+
+              <div className="modal-actions" style={{ marginTop: '1rem', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+                <button type="button" className="btn btn-outline" onClick={() => setReplyContact(null)}>Cancel</button>
+                <button type="submit" className="btn btn-primary" disabled={sendingReply}>
+                  {sendingReply ? 'Sending...' : 'Send Reply'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

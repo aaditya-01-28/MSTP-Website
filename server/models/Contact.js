@@ -5,6 +5,7 @@ const contactSchema = new mongoose.Schema({
   email: String,
   subject: String,
   message: String,
+  status: { type: String, enum: ['Pending', 'Contacted', 'Update', 'Completed'], default: 'Pending' },
   submittedAt: { type: Date, default: Date.now }
 }, { timestamps: true });
 

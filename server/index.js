@@ -310,6 +310,32 @@ app.post('/api/admin/reset-password', async (req, res) => {
   }
 });
 
+// Admin Custom Email Reply
+const authMiddleware = require('./middleware/auth');
+app.post('/api/admin/reply', authMiddleware, async (req, res) => {
+  const { email, subject, message } = req.body;
+  if (!email || !subject || !message) {
+    return res.status(400).json({ error: 'Email, subject, and message are required.' });
+  }
+
+  try {
+    if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+      await transporter.sendMail({
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: subject,
+        text: message
+      });
+      res.json({ message: 'Email sent successfully!' });
+    } else {
+      res.status(500).json({ error: 'Email configuration missing on server.' });
+    }
+  } catch (error) {
+    console.error('Failed to send reply email:', error);
+    res.status(500).json({ error: 'Failed to send email.' });
+  }
+});
+
 // ==========================================
 // CONTENT & DATA ROUTES (CRUD)
 // ==========================================

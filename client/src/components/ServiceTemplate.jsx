@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { CheckCircle2, Code2, MessageSquare, LayoutList, TestTube, Rocket, Settings, Cpu } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import './ServiceTemplate.css';

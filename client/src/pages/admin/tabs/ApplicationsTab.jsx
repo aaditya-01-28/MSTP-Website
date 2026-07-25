@@ -7,6 +7,10 @@ const ApplicationsTab = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [selectedApp, setSelectedApp] = useState(null);
+  const [replyApp, setReplyApp] = useState(null);
+  const [replySubject, setReplySubject] = useState('');
+  const [replyMessage, setReplyMessage] = useState('');
+  const [sendingReply, setSendingReply] = useState(false);
 
   useEffect(() => {
     fetchApplications();
@@ -24,6 +28,51 @@ const ApplicationsTab = () => {
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      await fetch(`${API_BASE_URL}/api/applications/${id}`, {
+        method: 'PUT',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('adminToken')}` 
+        },
+        body: JSON.stringify({ status: newStatus })
+      });
+      setApplications(applications.map(app => app._id === id ? { ...app, status: newStatus } : app));
+    } catch (err) {
+      alert('Failed to update status');
+    }
+  };
+
+  const handleSendReply = async (e) => {
+    e.preventDefault();
+    setSendingReply(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/admin/reply`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('adminToken')}` 
+        },
+        body: JSON.stringify({
+          email: replyApp.email,
+          subject: replySubject,
+          message: replyMessage
+        })
+      });
+      if (res.ok) {
+        alert('Reply sent successfully!');
+        setReplyApp(null);
+      } else {
+        alert('Failed to send reply');
+      }
+    } catch (err) {
+      alert('Error sending reply');
+    } finally {
+      setSendingReply(false);
     }
   };
 
@@ -53,7 +102,7 @@ const ApplicationsTab = () => {
     exportToExcel(applications, 'Job_Applications', [
       'jobTitle', 'jobId', 'firstName', 'lastName', 'email', 
       'countryCode', 'phone', 'country', 'city', 'resumeName', 
-      'githubUrl', 'linkedinUrl', 'coverLetter', 'appliedAt', 'createdAt'
+      'githubUrl', 'linkedinUrl', 'coverLetter', 'status', 'appliedAt', 'createdAt'
     ]);
   };
 
@@ -115,6 +164,7 @@ const ApplicationsTab = () => {
                 <th>Location</th>
                 <th>Resume / Portfolios</th>
                 <th>Date Applied</th>
+                <th>Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -151,8 +201,31 @@ const ApplicationsTab = () => {
                     </div>
                   </td>
                   <td>{app.appliedAt ? new Date(app.appliedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '-'}</td>
+                  <td style={{ width: '140px' }}>
+                    <select 
+                      value={app.status || 'Pending'} 
+                      onChange={(e) => handleStatusChange(app._id, e.target.value)}
+                      style={{
+                        padding: '4px 8px',
+                        borderRadius: '4px',
+                        border: '1px solid var(--border-color)',
+                        background: 'var(--bg-secondary)',
+                        color: 'var(--text-primary)',
+                        fontSize: '0.85rem',
+                        width: '100%'
+                      }}
+                    >
+                      <option value="Pending">Pending</option>
+                      <option value="Shortlisted">Shortlisted</option>
+                      <option value="Onboarded">Onboarded</option>
+                      <option value="Rejected">Rejected</option>
+                    </select>
+                  </td>
                   <td>
                     <div className="action-buttons">
+                      <button className="btn-sm btn-edit" onClick={() => setReplyApp(app)} title="Reply via Email">
+                        ✉️ Reply
+                      </button>
                       {app.coverLetter && (
                         <button className="btn-sm btn-edit" onClick={() => setSelectedApp(app)} title="View Details">
                           👁️ View
@@ -201,6 +274,65 @@ const ApplicationsTab = () => {
             <div className="modal-actions" style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'flex-end' }}>
               <button className="btn btn-outline" onClick={() => setSelectedApp(null)}>Close</button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal for Custom Reply */}
+      {replyApp && (
+        <div className="modal-overlay" onClick={() => setReplyApp(null)}>
+          <div className="modal-content" onClick={e => e.stopPropagation()} style={{ maxWidth: '600px' }}>
+            <h3>Reply to {replyApp.firstName} {replyApp.lastName}</h3>
+            <p style={{ margin: '8px 0', color: 'var(--text-secondary)' }}>
+              <strong>To:</strong> {replyApp.email}
+            </p>
+            
+            <form onSubmit={handleSendReply} style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div>
+                <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '6px' }}>Subject:</label>
+                <input 
+                  type="text" 
+                  required
+                  value={replySubject}
+                  onChange={(e) => setReplySubject(e.target.value)}
+                  placeholder="Enter email subject"
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    borderRadius: '6px',
+                    border: '1px solid var(--border-color)',
+                    background: 'var(--bg-secondary)',
+                    color: 'var(--text-primary)'
+                  }}
+                />
+              </div>
+              <div>
+                <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '6px' }}>Message:</label>
+                <textarea 
+                  required
+                  value={replyMessage}
+                  onChange={(e) => setReplyMessage(e.target.value)}
+                  placeholder="Type your reply here..."
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    borderRadius: '6px',
+                    border: '1px solid var(--border-color)',
+                    background: 'var(--bg-secondary)',
+                    color: 'var(--text-primary)',
+                    minHeight: '150px',
+                    resize: 'vertical'
+                  }}
+                />
+              </div>
+
+              <div className="modal-actions" style={{ marginTop: '1rem', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+                <button type="button" className="btn btn-outline" onClick={() => setReplyApp(null)}>Cancel</button>
+                <button type="submit" className="btn btn-primary" disabled={sendingReply}>
+                  {sendingReply ? 'Sending...' : 'Send Reply'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

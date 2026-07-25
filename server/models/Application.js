@@ -14,6 +14,7 @@ const applicationSchema = new mongoose.Schema({
   coverLetter: String,
   githubUrl: String,
   linkedinUrl: String,
+  status: { type: String, enum: ['Pending', 'Shortlisted', 'Onboarded', 'Rejected'], default: 'Pending' },
   appliedAt: { type: Date, default: Date.now }
 }, { timestamps: true });
 
