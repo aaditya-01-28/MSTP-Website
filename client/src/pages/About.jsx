@@ -61,7 +61,7 @@ const About = () => {
         <div className="container">
           <div className="story-grid">
             <div className="story-image">
-              <img src={missionImg} alt="MAATRSHRI Mission" className="mission-graphic" style={{width: '100%', borderRadius: '12px'}} />
+              <img src={missionImg} alt="MAATRSHRI Mission" className="mission-graphic" />
             </div>
             <div className="story-content">
               <h2 className="section-title" style={{textAlign: 'left'}}>Our Story: Who We Are</h2>
@@ -76,7 +76,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* Vision & Mission */}
+      {/* Vision, Mission, & Values */}
       <section className="section vision-mission">
         <div className="container">
           <div className="vm-grid">
@@ -95,22 +95,16 @@ const About = () => {
                 <li><CheckCircle2 className="vm-icon" size={20} /> To help clients improve productivity, streamline workflows, and achieve long-term sustainable growth by combining technology with strategy.</li>
               </ul>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Values */}
-      <section className="section values-section">
-        <div className="container">
-          <div className="values-card">
-            <h3 className="vm-title">Our Values</h3>
-            <ul className="values-list">
-              <li><strong>Innovation</strong> - We embrace modern technologies and digital transformation.</li>
-              <li><strong>Client-focused Approach</strong> - We deliver solutions tailored to business needs within the deadline.</li>
-              <li><strong>Growth & Excellence</strong> - We help businesses improve productivity and efficiency.</li>
-              <li><strong>Collaboration</strong> - We build strong partnerships with clients and teams.</li>
-              <li><strong>Technology-driven Mindset</strong> - We combine strategy with advanced digital solutions.</li>
-            </ul>
+            <div className="vm-card values-card">
+              <h3 className="vm-title">Our Values</h3>
+              <ul className="values-list">
+                <li><strong>Innovation</strong> - We embrace modern technologies and digital transformation.</li>
+                <li><strong>Client-focused Approach</strong> - We deliver solutions tailored to business needs within the deadline.</li>
+                <li><strong>Growth & Excellence</strong> - We help businesses improve productivity and efficiency.</li>
+                <li><strong>Collaboration</strong> - We build strong partnerships with clients and teams.</li>
+                <li><strong>Technology-driven Mindset</strong> - We combine strategy with advanced digital solutions.</li>
+              </ul>
+            </div>
           </div>
         </div>
       </section>

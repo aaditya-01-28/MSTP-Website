@@ -248,6 +248,68 @@ app.post('/api/admin/login', async (req, res) => {
   }
 });
 
+// Admin Forgot Password
+app.post('/api/admin/forgot-password', async (req, res) => {
+  const { email } = req.body;
+  try {
+    const admin = await Admin.findOne({ email });
+    if (!admin) {
+      return res.status(404).json({ error: 'No admin account found with this email' });
+    }
+
+    const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+    admin.resetCode = resetCode;
+    admin.resetCodeExpires = Date.now() + 15 * 60 * 1000;
+    await admin.save();
+
+    try {
+      if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+        await transporter.sendMail({
+          from: process.env.EMAIL_USER,
+          to: email,
+          subject: 'Admin Password Reset Code - MAATRSHRI Group',
+          text: `Your password reset code is: ${resetCode}\n\nThis code is valid for 15 minutes.`
+        });
+      }
+    } catch (e) {
+      console.log('Email send skipped/failed:', e.message);
+    }
+
+    res.json({ 
+      message: 'Verification code generated.',
+      devCode: resetCode
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Server error during forgot password' });
+  }
+});
+
+// Admin Reset Password
+app.post('/api/admin/reset-password', async (req, res) => {
+  const { email, resetCode, newPassword } = req.body;
+  try {
+    const admin = await Admin.findOne({ 
+      email, 
+      resetCode, 
+      resetCodeExpires: { $gt: Date.now() } 
+    });
+
+    if (!admin) {
+      return res.status(400).json({ error: 'Invalid or expired verification code' });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    admin.password = await bcrypt.hash(newPassword, salt);
+    admin.resetCode = undefined;
+    admin.resetCodeExpires = undefined;
+    await admin.save();
+
+    res.json({ message: 'Password reset successfully! You can now log in.' });
+  } catch (error) {
+    res.status(500).json({ error: 'Server error during password reset' });
+  }
+});
+
 // ==========================================
 // CONTENT & DATA ROUTES (CRUD)
 // ==========================================

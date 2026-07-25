@@ -11,8 +11,8 @@ const Testimonials = () => {
 
   const [testimonials, setTestimonials] = useState([{
     _id: 1,
-    text: 'Loading testimonials...',
-    name: 'Loading...',
+    content: 'Loading testimonials...',
+    author: 'Loading...',
     role: '',
     rating: 5,
     avatar: defaultUserImg
@@ -48,13 +48,13 @@ const Testimonials = () => {
             
             <div className="testimonial-slider-card">
               <p className="testimonial-text">
-                {currentTestimonial.text}
+                {currentTestimonial.content}
               </p>
               
               <div className="testimonial-author-row">
-                <img src={currentTestimonial.avatar || defaultUserImg} alt={currentTestimonial.name} className="author-avatar-img" />
+                <img src={currentTestimonial.avatar || defaultUserImg} alt={currentTestimonial.author} className="author-avatar-img" />
                 <div className="author-details">
-                  <h4>{currentTestimonial.name}</h4>
+                  <h4>{currentTestimonial.author}</h4>
                   <span>{currentTestimonial.role}</span>
                 </div>
                 <div className="author-rating">
