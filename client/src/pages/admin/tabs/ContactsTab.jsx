@@ -177,7 +177,7 @@ const ContactsTab = () => {
                       ? new Date(item.createdAt || item.submittedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) 
                       : '-'}
                   </td>
-                  <td style={{ width: '130px' }}>
+                  <td style={{ minWidth: '160px' }}>
                     <select 
                       value={item.status || 'Pending'} 
                       onChange={(e) => handleStatusChange(item._id, e.target.value)}

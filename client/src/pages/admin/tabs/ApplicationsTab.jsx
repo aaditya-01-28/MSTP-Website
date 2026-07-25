@@ -201,7 +201,7 @@ const ApplicationsTab = () => {
                     </div>
                   </td>
                   <td>{app.appliedAt ? new Date(app.appliedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '-'}</td>
-                  <td style={{ width: '130px' }}>
+                  <td style={{ minWidth: '160px' }}>
                     <select 
                       value={app.status || 'Pending'} 
                       onChange={(e) => handleStatusChange(app._id, e.target.value)}
