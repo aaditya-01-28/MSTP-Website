@@ -19,7 +19,11 @@ const ContactsTab = () => {
   const fetchContacts = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/api/contacts`);
+      const res = await fetch(`${API_BASE_URL}/api/contacts`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+        }
+      });
       const data = await res.json();
       if (Array.isArray(data)) {
         setContacts(data);

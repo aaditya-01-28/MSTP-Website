@@ -19,7 +19,11 @@ const ApplicationsTab = () => {
   const fetchApplications = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/api/applications`);
+      const res = await fetch(`${API_BASE_URL}/api/applications`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+        }
+      });
       const data = await res.json();
       if (Array.isArray(data)) {
         setApplications(data);
