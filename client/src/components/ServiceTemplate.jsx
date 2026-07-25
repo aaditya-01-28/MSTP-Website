@@ -130,7 +130,15 @@ const ServiceTemplate = () => {
         if (Array.isArray(data)) {
           const found = data.find(s => s.id === serviceId || s._id === serviceId);
           if (found) {
-            setService(found);
+            setService({
+              ...localData,
+              ...found,
+              title: found.title || localData?.title,
+              description: found.description || localData?.description,
+              features: (found.features && found.features.length > 0) ? found.features : (localData?.features || []),
+              processSteps: (found.processSteps && found.processSteps.length > 0) ? found.processSteps : (localData?.processSteps || []),
+              technologies: (found.technologies && found.technologies.length > 0) ? found.technologies : (localData?.technologies || [])
+            });
           } else if (!localData) {
             navigate('/services');
           }
