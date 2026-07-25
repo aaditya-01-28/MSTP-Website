@@ -327,4 +327,5 @@ app.get("*", (req, res) => {
 // ✅ START SERVER (MUST BE LAST)
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+  // Restart triggered
 });

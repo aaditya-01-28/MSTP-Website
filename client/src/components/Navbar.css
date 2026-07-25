@@ -102,6 +102,10 @@
   top: calc(100% + 15px);
 }
 
+.mega-menu.force-close {
+  display: none !important;
+}
+
 .mega-menu-grid {
   display: flex;
   gap: 3rem;

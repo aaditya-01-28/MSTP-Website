@@ -36,8 +36,15 @@ import iconDex from '../assets/services/dex 2.png';
 const Navbar = ({ theme, toggleTheme }) => {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [forceCloseMegaMenu, setForceCloseMegaMenu] = useState(false);
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
+
+  const handleServiceClick = () => {
+    closeMobileMenu();
+    setForceCloseMegaMenu(true);
+    setTimeout(() => setForceCloseMegaMenu(false), 300);
+  };
 
   return (
     <nav className="navbar">
@@ -55,10 +62,13 @@ const Navbar = ({ theme, toggleTheme }) => {
           <li>
             <Link to="/about" className={location.pathname === '/about' ? 'active' : ''} onClick={closeMobileMenu}>About Us</Link>
           </li>
-          <li className="nav-item-dropdown">
+          <li 
+            className="nav-item-dropdown"
+            onMouseLeave={() => setForceCloseMegaMenu(false)}
+          >
             <Link to="/services" className={location.pathname === '/services' ? 'active' : ''} onClick={closeMobileMenu}>Services</Link>
-            <div className="mega-menu">
-              <div className="mega-menu-grid">
+            <div className={`mega-menu ${forceCloseMegaMenu ? 'force-close' : ''}`}>
+              <div className="mega-menu-grid" onClick={handleServiceClick}>
                 
                 <div className="mega-menu-col">
                   <h4>FOUNDATION</h4>
