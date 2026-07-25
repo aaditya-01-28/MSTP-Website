@@ -163,9 +163,23 @@
   justify-content: center;
   gap: 1rem;
   z-index: 12;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow-x: auto;
   margin-top: 0;
   margin-bottom: 0;
+  padding-bottom: 8px;
+}
+
+/* Hide scrollbar for cleaner look but keep it scrollable */
+.hero-overlay-container::-webkit-scrollbar {
+  height: 6px;
+}
+.hero-overlay-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+.hero-overlay-container::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 .hero-overlay-card {

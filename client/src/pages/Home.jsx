@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Monitor, Smartphone, Layout, Users, Code, Mail, Lightbulb, 
   UserCheck, ShieldCheck, ChevronLeft, ChevronRight,
-  Bot, Cloud, Code2, LayoutGrid, MonitorCheck
+  Bot, Cloud, Code2, LayoutGrid, MonitorCheck, Settings
 } from 'lucide-react';
 import './Home.css';
+import { API_BASE_URL } from '../apiConfig';
 
 // Hero Slider Assets
 import heroVideo from '../assets/home/Hero Section2.mp4';
@@ -33,7 +34,7 @@ const heroSlides = [
   { type: 'image', src: slider5 }
 ];
 
-const overlayServices = [
+const initialOverlayServices = [
   {
     title: 'AI SOLUTIONS',
     icon: <Bot size={32} />,
@@ -63,7 +64,14 @@ const overlayServices = [
 
 const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [activeOverlay, setActiveOverlay] = useState(0);
+  const [dbServices, setDbServices] = useState([]);
+
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/api/services`)
+      .then(res => res.json())
+      .then(data => setDbServices(data))
+      .catch(console.error);
+  }, []);
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev === heroSlides.length - 1 ? 0 : prev + 1));
@@ -123,6 +131,29 @@ const Home = () => {
       description: "We focus on transparent collaboration, timely delivery, and sustainable solutions that help businesses grow confidently."
     }
   ];
+
+  // Combine initial services with dynamically fetched services (preventing duplicates)
+  const combinedServices = [...initialOverlayServices];
+  if (dbServices && dbServices.length > 0) {
+    dbServices.forEach(dbService => {
+      // Check if it already exists in the initial list by title (case insensitive)
+      const exists = initialOverlayServices.some(
+        s => s.title.toLowerCase() === dbService.title.toLowerCase()
+      );
+      if (!exists && dbService.status !== 'Draft') {
+        combinedServices.push({
+          title: dbService.title.toUpperCase(),
+          // Use generic Settings icon if the service doesn't have an icon, or try to render an image if it has one
+          icon: dbService.icon ? (
+            <img src={dbService.icon} alt={dbService.title} style={{width: '32px', height: '32px', objectFit: 'contain'}} />
+          ) : (
+            <Settings size={32} />
+          ),
+          link: `/services/${dbService.id}`
+        });
+      }
+    });
+  }
 
   return (
     <div className="home">
@@ -188,12 +219,11 @@ const Home = () => {
 
             {/* Hero Services Cards Below Slider */}
             <div className="hero-overlay-container">
-              {overlayServices.map((service, idx) => (
+              {combinedServices.map((service, idx) => (
                 <Link 
                   to={service.link} 
                   key={idx} 
-                  className={`hero-overlay-card ${activeOverlay === idx ? 'active' : ''}`} 
-                  onClick={() => setActiveOverlay(idx)}
+                  className="hero-overlay-card"
                 >
                   <div className="overlay-icon-box">{service.icon}</div>
                   <span className="overlay-title">{service.title}</span>

@@ -264,7 +264,7 @@ const CareersTab = () => {
                   className="btn btn-outline" 
                   style={{padding: '0.7rem 1.5rem', backgroundColor: 'var(--bg-tertiary)'}}
                 >
-                  💾 Save as Draft
+                  Save as Draft
                 </button>
                 <button 
                   type="button" 
@@ -272,7 +272,7 @@ const CareersTab = () => {
                   className="btn btn-primary"
                   style={{padding: '0.7rem 1.5rem'}}
                 >
-                  {editingId ? 'Save Changes' : '🚀 Publish Job'}
+                  {editingId ? 'Save Changes' : 'Publish Job'}
                 </button>
               </div>
 
