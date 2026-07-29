@@ -72,13 +72,53 @@ import mysqlImg from '../assets/tech_logo/mysql.png';
 import phpImg from '../assets/tech_logo/php.png';
 import azureImg from '../assets/tech_logo/azure.png';
 
+import androidImg from '../assets/tech_logo/Android.png';
+import appleImg from '../assets/tech_logo/Apple.png';
+import arduinoImg from '../assets/tech_logo/Arduino.png';
+import cppImg from '../assets/tech_logo/C++ (CPlusPlus).png';
+import cypressImg from '../assets/tech_logo/Cypress.png';
+import ethereumImg from '../assets/tech_logo/Ethereum.png';
+import flutterImg from '../assets/tech_logo/Flutter.png';
+import googleAdsImg from '../assets/tech_logo/Googleads.png';
+import hardhatImg from '../assets/tech_logo/Hardhat.png';
+import junitImg from '../assets/tech_logo/JUnit.png';
+import javaImg from '../assets/tech_logo/Java.png';
+import jestImg from '../assets/tech_logo/Jest.png';
+import kotlinImg from '../assets/tech_logo/Kotlin.png';
+import nginxImg from '../assets/tech_logo/NGINX.png';
+import nextjsImg from '../assets/tech_logo/Next.js.png';
+import oracleImg from '../assets/tech_logo/Oracle.png';
+import pandasImg from '../assets/tech_logo/Pandas.png';
+import paypalImg from '../assets/tech_logo/PayPal.png';
+import postgresImg from '../assets/tech_logo/PostgresSQL.png';
+import postmanImg from '../assets/tech_logo/Postman.png';
+import pytorchImg from '../assets/tech_logo/PyTorch.png';
+import pythonImg from '../assets/tech_logo/Python.png';
+import raspberryImg from '../assets/tech_logo/Raspberry Pi.png';
+import redisImg from '../assets/tech_logo/Redis.png';
+import salesforceImg from '../assets/tech_logo/Salesforce.png';
+import seleniumImg from '../assets/tech_logo/Selenium.png';
+import shopifyImg from '../assets/tech_logo/Shopify.png';
+import socketioImg from '../assets/tech_logo/Socket.io.png';
+import solidityImg from '../assets/tech_logo/Solidity.png';
+import stripeImg from '../assets/tech_logo/Stripe.png';
+import swiftImg from '../assets/tech_logo/Swift.png';
+import tensorflowImg from '../assets/tech_logo/TensorFlow.png';
+import typescriptImg from '../assets/tech_logo/TypeScript.png';
+import woocommerceImg from '../assets/tech_logo/WooCommerce.png';
+import wordpressImg from '../assets/tech_logo/WordPress.png';
+import githubImg from '../assets/tech_logo/github.png';
+import metaAdsImg from '../assets/tech_logo/metaads.png';
+import openaiImg from '../assets/tech_logo/openai.png';
+import powerbiImg from '../assets/tech_logo/powerbi.png';
+
 const localTechIcons = {
   'react': reactImg,
   'reactjs': reactImg,
   'react.js': reactImg,
   'react native': reactImg,
-  'nextjs': reactImg,
-  'next.js': reactImg,
+  'nextjs': nextjsImg,
+  'next.js': nextjsImg,
   'node': nodeImg,
   'nodejs': nodeImg,
   'node.js': nodeImg,
@@ -94,7 +134,51 @@ const localTechIcons = {
   'mysql': mysqlImg,
   'php': phpImg,
   'azure': azureImg,
-  'microsoft azure': azureImg
+  'microsoft azure': azureImg,
+  'android': androidImg,
+  'ios / android': androidImg,
+  'ios': appleImg,
+  'apple': appleImg,
+  'arduino': arduinoImg,
+  'c++': cppImg,
+  'cypress': cypressImg,
+  'ethereum': ethereumImg,
+  'flutter': flutterImg,
+  'google ads': googleAdsImg,
+  'hardhat': hardhatImg,
+  'junit': junitImg,
+  'java': javaImg,
+  'jest': jestImg,
+  'kotlin': kotlinImg,
+  'nginx': nginxImg,
+  'oracle db': oracleImg,
+  'oracle': oracleImg,
+  'oracle erp cloud': oracleImg,
+  'pandas': pandasImg,
+  'paypal': paypalImg,
+  'postgresql': postgresImg,
+  'postman': postmanImg,
+  'pytorch': pytorchImg,
+  'python': pythonImg,
+  'raspberry pi': raspberryImg,
+  'redis': redisImg,
+  'salesforce': salesforceImg,
+  'sales cloud': salesforceImg,
+  'selenium': seleniumImg,
+  'shopify': shopifyImg,
+  'socket.io': socketioImg,
+  'solidity': solidityImg,
+  'stripe': stripeImg,
+  'swift': swiftImg,
+  'tensorflow': tensorflowImg,
+  'typescript': typescriptImg,
+  'woocommerce': woocommerceImg,
+  'wordpress': wordpressImg,
+  'github': githubImg,
+  'meta ads': metaAdsImg,
+  'openai': openaiImg,
+  'powerbi': powerbiImg,
+  'tableau': powerbiImg
 };
 
 const processIcons = [
@@ -229,9 +313,9 @@ const ServiceTemplate = () => {
               return (
                 <div className="tech-item" key={idx}>
                   {techIcon ? (
-                    <img src={techIcon} alt={techName} style={{width: '36px', height: '36px', objectFit: 'contain'}} />
+                    <img src={techIcon} alt={techName} style={{width: '56px', height: '56px', objectFit: 'contain'}} />
                   ) : (
-                    <Cpu size={32} color="var(--accent-primary)" />
+                    <Cpu size={48} color="var(--accent-primary)" />
                   )}
                   <span>{techName}</span>
                 </div>
