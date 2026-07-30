@@ -10,6 +10,7 @@ const TeamMember = require('../models/TeamMember');
 const SiteSettings = require('../models/SiteSettings');
 const Contact = require('../models/Contact');
 const Application = require('../models/Application');
+const PrivacyPolicy = require('../models/PrivacyPolicy');
 
 // Helper to create PUBLIC CRUD routes (GETs are public, write operations are protected)
 const createPublicCrudRoutes = (model, pathName) => {
@@ -152,6 +153,32 @@ router.post('/settings', authMiddleware, async (req, res) => {
       await settings.save();
     }
     res.json(settings);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// Route to get PrivacyPolicy (Singleton)
+router.get('/privacy', async (req, res) => {
+  try {
+    const policy = await PrivacyPolicy.findOne();
+    res.json(policy || {});
+  } catch (err) {
+    res.status(500).json({ error: 'Server Error' });
+  }
+});
+
+// Route to update PrivacyPolicy (Singleton, protected)
+router.put('/privacy', authMiddleware, async (req, res) => {
+  try {
+    let policy = await PrivacyPolicy.findOne();
+    if (policy) {
+      policy = await PrivacyPolicy.findByIdAndUpdate(policy._id, req.body, { new: true });
+    } else {
+      policy = new PrivacyPolicy(req.body);
+      await policy.save();
+    }
+    res.json(policy);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }

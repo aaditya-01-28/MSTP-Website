@@ -14,6 +14,7 @@ import TeamTab from './tabs/TeamTab';
 import SettingsTab from './tabs/SettingsTab';
 import ApplicationsTab from './tabs/ApplicationsTab';
 import ContactsTab from './tabs/ContactsTab';
+import PrivacyTab from './tabs/PrivacyTab';
 
 const AdminPanel = ({ theme, toggleTheme }) => {
   const [activeTab, setActiveTab] = useState('applications');
@@ -32,7 +33,7 @@ const AdminPanel = ({ theme, toggleTheme }) => {
     navigate('/admin/login');
   };
 
-  const isWebsiteMgmtTab = ['careers', 'services', 'portfolio', 'testimonials', 'team', 'settings'].includes(activeTab);
+  const isWebsiteMgmtTab = ['careers', 'services', 'portfolio', 'testimonials', 'team', 'settings', 'privacy'].includes(activeTab);
 
   const websiteSubTabs = [
     { id: 'careers', name: 'Careers', icon: <Briefcase size={16}/>, component: CareersTab },
@@ -41,6 +42,7 @@ const AdminPanel = ({ theme, toggleTheme }) => {
     { id: 'testimonials', name: 'Testimonials', icon: <MessageSquare size={16}/>, component: TestimonialsTab },
     { id: 'team', name: 'Leadership Team', icon: <Users size={16}/>, component: TeamTab },
     { id: 'settings', name: 'Site Settings', icon: <Settings size={16}/>, component: SettingsTab },
+    { id: 'privacy', name: 'Privacy Policy', icon: <FileText size={16}/>, component: PrivacyTab },
   ];
 
   const renderContent = () => {
@@ -61,6 +63,8 @@ const AdminPanel = ({ theme, toggleTheme }) => {
         return <TeamTab />;
       case 'settings':
         return <SettingsTab />;
+      case 'privacy':
+        return <PrivacyTab />;
       default:
         return <ApplicationsTab />;
     }

@@ -1,6 +1,7 @@
 const Service = require('./models/Service');
 const Portfolio = require('./models/Portfolio');
 const Career = require('./models/Career');
+const PrivacyPolicy = require('./models/PrivacyPolicy');
 const Testimonial = require('./models/Testimonial');
 const TeamMember = require('./models/TeamMember');
 const SiteSettings = require('./models/SiteSettings');
@@ -672,6 +673,83 @@ const seedDatabase = async () => {
         }
       ]);
       console.log('✅ Initial Job Applications seeded into MongoDB');
+    }
+
+    // Seed PrivacyPolicy
+    const privacyCount = await PrivacyPolicy.countDocuments();
+    if (privacyCount === 0) {
+      await PrivacyPolicy.create({
+        title: 'Privacy Policy',
+        subtitle: 'Your data. Your consent. Your Privacy Matters.',
+        introText: 'At White Circle Group, we respect your privacy and are committed to protecting your personal information. This Privacy Policy explains how we collect, use, and safeguard your data when you visit our website or use our services. Please read it carefully to understand how we handle your information.',
+        sections: [
+          {
+            number: 1,
+            iconName: 'FileText',
+            title: '1. Introduction',
+            content: 'White Circle Group collects, builds, and deploys professional applications for users. This policy outlines how we handle user data when you visit our website or use our products.'
+          },
+          {
+            number: 2,
+            iconName: 'Database',
+            title: '2. Information We Collect',
+            content: '',
+            col1Title: '2.1 Personal Data',
+            col1Content: 'The only personal data shared with us is:\n• Name, email address, phone number, and company details.\n• Information received through forms, emails, or inquiries.',
+            col2Title: '2.2 Non-Personal Data',
+            col2Content: 'We may collect non-personal data such as:\n• Browser type and device information.\n• Pages visited and interaction data.'
+          },
+          {
+            number: 3,
+            iconName: 'Settings',
+            title: '3. How We Use Your Information',
+            content: '• Respond to your queries and provide support.\n• Improve our products and website experience.\n• Send updates, offers, or important information related to our products.\n• Prevent fraud and protect against unauthorized access.'
+          },
+          {
+            number: 4,
+            iconName: 'Shield',
+            title: '4. Data Protection',
+            content: 'We use appropriate security measures to protect your personal information from loss, unauthorized access, or disclosure.'
+          },
+          {
+            number: 5,
+            iconName: 'Mail',
+            title: '5. Sharing of Information',
+            content: 'White Circle Group does not sell or rent your personal information to third parties. We may share data only:\n• When required by law.\n• With trustworthy partners who agree to strictly guard user privacy.'
+          },
+          {
+            number: 6,
+            iconName: 'Cookie',
+            title: '6. Cookies',
+            content: 'Our website may use cookies to improve user experience and analyze website traffic. You can disable cookies through your browser settings if you prefer.'
+          },
+          {
+            number: 7,
+            iconName: 'Link',
+            title: '7. Third-Party Links',
+            content: 'Our website may contain links to third-party websites. We are not responsible for the privacy practices or content of these websites.'
+          },
+          {
+            number: 8,
+            iconName: 'User',
+            title: '8. Your Rights',
+            content: 'You have the right to:\n• Request copy of your data.\n• Correct inaccurate information.\n• Delete your information from our system.\nTo make such requests, please contact us through our official website.'
+          },
+          {
+            number: 9,
+            iconName: 'RotateCw',
+            title: '9. Updates to This Policy',
+            content: 'White Circle Group may update this Privacy Policy from time to time. Any changes will be posted on this page.'
+          },
+          {
+            number: 10,
+            iconName: 'Mail',
+            title: '10. Contact Us',
+            content: 'If you have questions regarding this Privacy Policy, please contact us through our contact page.'
+          }
+        ]
+      });
+      console.log('✅ Initial Privacy Policy seeded into MongoDB');
     }
   } catch (error) {
     console.error('Error seeding database:', error);

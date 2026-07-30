@@ -163,6 +163,7 @@ const ApplicationsTab = () => {
             <thead>
               <tr>
                 <th>Applicant</th>
+                <th>Job ID</th>
                 <th>Applied Position</th>
                 <th>Contact</th>
                 <th>Location</th>
@@ -179,10 +180,14 @@ const ApplicationsTab = () => {
                     <strong>{app.firstName} {app.lastName}</strong>
                   </td>
                   <td>
-                    <span className="badge badge-published" style={{ background: 'rgba(59, 130, 246, 0.15)', color: '#3b82f6', borderColor: 'rgba(59, 130, 246, 0.3)' }}>
+                    <span className="badge" style={{ background: 'var(--bg-tertiary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', fontFamily: 'monospace', fontWeight: 600 }}>
+                      {app.jobId || '-'}
+                    </span>
+                  </td>
+                  <td>
+                    <span className="badge badge-published" style={{ background: 'rgba(215, 184, 137, 0.15)', color: 'var(--accent-primary)', borderColor: 'rgba(215, 184, 137, 0.3)' }}>
                       {app.jobTitle || 'General'}
                     </span>
-                    {app.jobId && <small style={{ display: 'block', color: 'var(--text-secondary)', marginTop: '2px' }}>ID: {app.jobId}</small>}
                   </td>
                   <td>
                     <div>{app.email}</div>

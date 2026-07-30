@@ -22,6 +22,19 @@ const LinkedinIcon = ({ size = 18, className = "" }) => (
   </svg>
 );
 
+const formatExperience = (exp) => {
+  if (!exp) return '';
+  const trimmed = exp.toString().trim();
+  if (/\b(year|years|yr|yrs)\b/i.test(trimmed)) {
+    return trimmed;
+  }
+  const num = parseFloat(trimmed);
+  if (!isNaN(num)) {
+    return `${num} ${num === 1 ? 'Year' : 'Years'}`;
+  }
+  return `${trimmed} Years`;
+};
+
 const defaultJob = {
   id: '100',
   title: 'Software developer (SDE-1)',
@@ -52,7 +65,20 @@ const ApplyForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const selectedJob = location.state?.job || defaultJob;
+  const selectedJob = location.state?.job || {
+    id: '100',
+    title: 'Software developer (SDE-1)',
+    department: 'Product and Platform Engineering',
+    type: 'Full-time',
+    experience: '0-2 years',
+    location: 'Bhopal, India',
+    date: '30/06/2026',
+    description: 'Extensive experience in Java programming, demonstrating advanced proficiency in developing scalable applications. You will be responsible for building robust backend systems and integrating with microservices.',
+    primarySkills: 'Java Backend, Java, Python',
+    secondarySkills: 'Java + spring boot + Microservices, SQL',
+    overview: 'JD Focus: Strong CS fundamentals, coding, and data structures skills - Freshers from IITs, NITs, BITS, IIITs, and Other Premier Institutes only.',
+    eligibility: 'Candidates must have a CGPA of 7.5 and above. CGPA score is mandatory on the resume. Profiles without CGPA mentioned will not be considered.'
+  };
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
@@ -163,7 +189,7 @@ const ApplyForm = () => {
               </h1>
               <div className="job-meta-bar">
                 <span className="job-meta-tag"><Briefcase size={15} /> {selectedJob.department}</span>
-                <span className="job-meta-tag"><Clock size={15} /> {selectedJob.experience}</span>
+                <span className="job-meta-tag"><Clock size={15} /> {formatExperience(selectedJob.experience)}</span>
                 <span className="job-meta-tag"><MapPin size={15} /> {selectedJob.location}</span>
                 <span className="job-meta-tag"><Calendar size={15} /> {selectedJob.date}</span>
               </div>
@@ -243,7 +269,7 @@ const ApplyForm = () => {
 
                 <div className="key-info-item">
                   <span className="key-label">Experience</span>
-                  <span className="key-value">{selectedJob.experience}</span>
+                  <span className="key-value">{formatExperience(selectedJob.experience)}</span>
                 </div>
 
                 <div className="key-info-item">

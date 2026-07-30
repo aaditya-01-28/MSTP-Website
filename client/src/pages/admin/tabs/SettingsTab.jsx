@@ -19,6 +19,7 @@ const SettingsTab = () => {
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState('');
 
   useEffect(() => {
@@ -78,6 +79,7 @@ const SettingsTab = () => {
       });
       if (res.ok) {
         setMessage('Settings saved successfully!');
+        setIsEditing(false);
       } else {
         setMessage('Failed to save settings.');
       }
@@ -87,43 +89,87 @@ const SettingsTab = () => {
     setSaving(false);
   };
 
-  if (loading) return <div>Loading settings...</div>;
+  if (loading) return <div style={{ padding: '2rem', textAlign: 'center' }}>Loading settings...</div>;
 
   return (
     <div>
       <div className="admin-header">
-        <h2>Site Settings</h2>
-        <button onClick={handleSubmit} className="btn btn-primary" disabled={saving}>
-          {saving ? 'Saving...' : 'Save Settings'}
-        </button>
+        <div>
+          <h2>Site Settings</h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '4px' }}>
+            {isEditing ? 'Editing mode active. Make changes below and click "Save Settings".' : 'Site settings are locked. Click "Edit Settings" to make changes.'}
+          </p>
+        </div>
+        
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          {isEditing ? (
+            <>
+              <button 
+                type="button" 
+                onClick={() => { fetchSettings(); setIsEditing(false); setMessage(''); }} 
+                className="btn btn-outline"
+              >
+                Cancel
+              </button>
+              <button 
+                type="button" 
+                onClick={handleSubmit} 
+                className="btn btn-primary" 
+                disabled={saving}
+              >
+                {saving ? 'Saving...' : '💾 Save Settings'}
+              </button>
+            </>
+          ) : (
+            <button 
+              type="button" 
+              onClick={() => setIsEditing(true)} 
+              className="btn btn-primary"
+            >
+              ✏️ Edit Settings
+            </button>
+          )}
+        </div>
       </div>
 
-      {message && <div style={{padding: '10px', backgroundColor: '#333', marginBottom: '20px', borderRadius: '5px', color: '#00e676'}}>{message}</div>}
+      {message && (
+        <div style={{
+          padding: '12px 16px', 
+          backgroundColor: message.includes('success') ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)', 
+          border: `1px solid ${message.includes('success') ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`,
+          marginBottom: '20px', 
+          borderRadius: '8px', 
+          color: message.includes('success') ? '#10b981' : '#ef4444',
+          fontWeight: 600
+        }}>
+          {message}
+        </div>
+      )}
 
       <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem'}}>
         {/* Left Column: General & Contact */}
         <div>
           <h3>Contact Details</h3>
-          <div className="form-group" style={{marginBottom: '1rem'}}>
-            <label>Contact Email</label>
-            <input type="email" name="contactEmail" value={settings.contactEmail || ''} onChange={handleChange} className="admin-input" />
+          <div className="form-group" style={{marginBottom: '1rem', marginTop: '1rem'}}>
+            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 600 }}>Contact Email</label>
+            <input type="email" name="contactEmail" value={settings.contactEmail || ''} onChange={handleChange} disabled={!isEditing} className="admin-input" />
           </div>
           <div className="form-group" style={{marginBottom: '1rem'}}>
-            <label>Contact Phone</label>
-            <input type="text" name="contactPhone" value={settings.contactPhone || ''} onChange={handleChange} className="admin-input" />
+            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 600 }}>Contact Phone</label>
+            <input type="text" name="contactPhone" value={settings.contactPhone || ''} onChange={handleChange} disabled={!isEditing} className="admin-input" />
           </div>
           <div className="form-group" style={{marginBottom: '1rem'}}>
-            <label>Contact Address</label>
-            <textarea name="contactAddress" value={settings.contactAddress || ''} onChange={handleChange} className="admin-input" rows="3"></textarea>
+            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 600 }}>Contact Address</label>
+            <textarea name="contactAddress" value={settings.contactAddress || ''} onChange={handleChange} disabled={!isEditing} className="admin-input" rows="3"></textarea>
           </div>
 
           <h3 style={{marginTop: '2rem'}}>Logo</h3>
-          <div className="form-group" style={{marginBottom: '1rem'}}>
-            <label>Upload Logo (Replaces Current)</label>
-            <input type="file" accept="image/*" onChange={handleImageUpload} className="admin-input" style={{padding: '0.5rem'}} />
+          <div className="form-group" style={{marginBottom: '1rem', marginTop: '1rem'}}>
+            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 600 }}>Upload Logo (Replaces Current)</label>
+            <input type="file" accept="image/*" onChange={handleImageUpload} disabled={!isEditing} className="admin-input" style={{padding: '0.5rem'}} />
             {settings.logoUrl && (
               <div style={{marginTop: '1rem'}}>
-                <img src={settings.logoUrl} alt="Logo Preview" style={{maxWidth: '150px', backgroundColor: '#fff', padding: '10px'}} />
+                <img src={settings.logoUrl} alt="Logo Preview" style={{maxWidth: '150px', backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', padding: '10px', borderRadius: '8px'}} />
               </div>
             )}
           </div>
@@ -132,30 +178,33 @@ const SettingsTab = () => {
         {/* Right Column: Socials & Text */}
         <div>
           <h3>Social Media Links</h3>
-          {['instagram', 'linkedin', 'whatsapp', 'twitter', 'facebook'].map(platform => (
-            <div className="form-group" key={platform} style={{marginBottom: '1rem'}}>
-              <label style={{textTransform: 'capitalize'}}>{platform} URL</label>
-              <input 
-                type="text" 
-                name={`social_${platform}`} 
-                value={settings.socialLinks?.[platform] || ''} 
-                onChange={handleChange} 
-                className="admin-input" 
-              />
-            </div>
-          ))}
+          <div style={{ marginTop: '1rem' }}>
+            {['instagram', 'linkedin', 'whatsapp', 'twitter', 'facebook'].map(platform => (
+              <div className="form-group" key={platform} style={{marginBottom: '1rem'}}>
+                <label style={{textTransform: 'capitalize', display: 'block', marginBottom: '6px', fontWeight: 600}}>{platform} URL</label>
+                <input 
+                  type="text" 
+                  name={`social_${platform}`} 
+                  value={settings.socialLinks?.[platform] || ''} 
+                  onChange={handleChange} 
+                  disabled={!isEditing}
+                  className="admin-input" 
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
       <div style={{marginTop: '2rem'}}>
         <h3>About Us Text (Shown on Careers Page)</h3>
-        <textarea name="aboutUsText" value={settings.aboutUsText || ''} onChange={handleChange} className="admin-input" rows="5"></textarea>
+        <textarea name="aboutUsText" value={settings.aboutUsText || ''} onChange={handleChange} disabled={!isEditing} className="admin-input" rows="5" style={{ marginTop: '0.8rem' }}></textarea>
       </div>
 
       <div style={{marginTop: '2rem', marginBottom: '4rem'}}>
         <h3>Privacy Policy</h3>
-        <p style={{color: '#a3a3a3', marginBottom: '1rem'}}>Enter the full privacy policy text here. Line breaks will be preserved.</p>
-        <textarea name="privacyPolicy" value={settings.privacyPolicy || ''} onChange={handleChange} className="admin-input" rows="15"></textarea>
+        <p style={{color: 'var(--text-secondary)', marginBottom: '0.8rem', marginTop: '4px', fontSize: '0.9rem'}}>Enter the full privacy policy text here. Line breaks will be preserved.</p>
+        <textarea name="privacyPolicy" value={settings.privacyPolicy || ''} onChange={handleChange} disabled={!isEditing} className="admin-input" rows="12"></textarea>
       </div>
     </div>
   );

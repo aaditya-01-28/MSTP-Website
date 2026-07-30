@@ -4,6 +4,19 @@ import './Careers.css';
 import { Link } from 'react-router-dom';
 import { API_BASE_URL } from '../apiConfig';
 
+const formatExperience = (exp) => {
+  if (!exp) return '';
+  const trimmed = exp.toString().trim();
+  if (/\b(year|years|yr|yrs)\b/i.test(trimmed)) {
+    return trimmed;
+  }
+  const num = parseFloat(trimmed);
+  if (!isNaN(num)) {
+    return `${num} ${num === 1 ? 'Year' : 'Years'}`;
+  }
+  return `${trimmed} Years`;
+};
+
 const Careers = () => {
   const [expandedJobId, setExpandedJobId] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -119,7 +132,7 @@ const Careers = () => {
                     <h3 className="job-box-title">{job.title}</h3>
                     <div className="job-box-meta">
                       <span className="job-box-meta-item"><MapPin size={16}/> {job.location}</span>
-                      <span className="job-box-meta-item"><Briefcase size={16}/> <span style={{color: 'var(--accent-primary)', marginRight: '4px'}}>{job.experience}</span> experience</span>
+                      <span className="job-box-meta-item"><Briefcase size={16}/> <span style={{color: 'var(--accent-primary)', marginRight: '4px'}}>{formatExperience(job.experience)}</span> experience</span>
                     </div>
                     <div className="job-box-footer">
                       <button className="view-details-btn" onClick={() => toggleJob(uniqueKey)}>
@@ -144,7 +157,7 @@ const Careers = () => {
                           </div>
                         </div>
                         <div className="job-list-meta-area-exp">
-                          <span className="meta-badge-exp"><Briefcase size={14} /> {job.experience}</span>
+                          <span className="meta-badge-exp"><Briefcase size={14} /> {formatExperience(job.experience)}</span>
                           <span className="meta-badge-exp"><MapPin size={14} /> {job.location}</span>
                           <span className="meta-badge-exp"><Calendar size={14} /> {job.date}</span>
                           <button className="collapse-btn" onClick={() => setExpandedJobId(null)}>
@@ -167,7 +180,7 @@ const Careers = () => {
                         <h4>Job Details</h4>
                         <p>{job.title}</p>
                         <p>{job.department}</p>
-                        <p>{job.experience}</p>
+                        <p>{formatExperience(job.experience)}</p>
                         <p>{job.location}</p>
                         <p>{job.date}</p>
                       </div>
