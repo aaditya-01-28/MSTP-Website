@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Briefcase, Layers, Folder, MessageSquare, Users, Settings, LogOut, 
-  FileText, Mail, Globe, ChevronDown, ChevronRight, Sun, Moon 
+  FileText, Mail, Globe, ChevronDown, ChevronRight, Sun, Moon, Send 
 } from 'lucide-react';
 import './AdminPanel.css';
 
@@ -15,6 +15,7 @@ import SettingsTab from './tabs/SettingsTab';
 import ApplicationsTab from './tabs/ApplicationsTab';
 import ContactsTab from './tabs/ContactsTab';
 import PrivacyTab from './tabs/PrivacyTab';
+import BulkReplyTab from './tabs/BulkReplyTab';
 
 const AdminPanel = ({ theme, toggleTheme }) => {
   const [activeTab, setActiveTab] = useState('applications');
@@ -51,6 +52,8 @@ const AdminPanel = ({ theme, toggleTheme }) => {
         return <ApplicationsTab />;
       case 'contacts':
         return <ContactsTab />;
+      case 'bulk-reply':
+        return <BulkReplyTab />;
       case 'careers':
         return <CareersTab />;
       case 'services':
@@ -101,6 +104,14 @@ const AdminPanel = ({ theme, toggleTheme }) => {
             onClick={() => setActiveTab('contacts')}
           >
             <Mail size={18} /> Contact Inquiries
+          </button>
+
+          {/* 3. Bulk Custom Reply Tab */}
+          <button
+            className={`admin-nav-btn ${activeTab === 'bulk-reply' ? 'active' : ''}`}
+            onClick={() => setActiveTab('bulk-reply')}
+          >
+            <Send size={18} /> Bulk Custom Reply
           </button>
 
           {/* 3. Website Management Group */}

@@ -42,9 +42,11 @@
 
 .hero-media-item {
   width: 100%;
-  height: auto;
-  max-height: 85vh;
+  height: 82vh;
+  min-height: 580px;
+  max-height: 88vh;
   object-fit: cover;
+  object-position: center 25%;
   display: block;
   opacity: 0;
   transition: opacity 0.8s ease-in-out;
@@ -154,7 +156,7 @@
 /* Hero Services Cards (Overlaid on bottom of slider) */
 .hero-overlay-container {
   position: absolute;
-  bottom: 60px;
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
   width: 94%;

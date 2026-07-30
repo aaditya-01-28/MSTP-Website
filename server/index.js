@@ -336,6 +336,61 @@ app.post('/api/admin/reply', authMiddleware, async (req, res) => {
   }
 });
 
+// Admin Bulk Custom Email Reply
+app.post('/api/admin/bulk-reply', authMiddleware, async (req, res) => {
+  const { recipients, subject, message } = req.body;
+  if (!Array.isArray(recipients) || recipients.length === 0 || !subject || !message) {
+    return res.status(400).json({ error: 'Recipients list, subject, and message are required.' });
+  }
+
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    return res.status(500).json({ error: 'Email configuration (EMAIL_USER / EMAIL_PASS) is missing on server.' });
+  }
+
+  let sentCount = 0;
+  const failedEmails = [];
+  const currentDateStr = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+  for (const item of recipients) {
+    const targetEmail = item.email;
+    if (!targetEmail) continue;
+
+    const targetName = item.name || item.firstName || 'User';
+    const firstName = targetName.split(' ')[0] || targetName;
+
+    // Replace dynamic tags in subject and message
+    const personalizedSubject = subject
+      .replace(/\{name\}/g, targetName)
+      .replace(/\{firstName\}/g, firstName)
+      .replace(/\{date\}/g, currentDateStr);
+
+    const personalizedMessage = message
+      .replace(/\{name\}/g, targetName)
+      .replace(/\{firstName\}/g, firstName)
+      .replace(/\{date\}/g, currentDateStr);
+
+    try {
+      await transporter.sendMail({
+        from: process.env.EMAIL_USER,
+        to: targetEmail,
+        subject: personalizedSubject,
+        text: personalizedMessage
+      });
+      sentCount++;
+    } catch (err) {
+      console.error(`Failed to send bulk email to ${targetEmail}:`, err);
+      failedEmails.push(targetEmail);
+    }
+  }
+
+  res.json({
+    message: `Bulk reply completed. Sent ${sentCount} of ${recipients.length} emails successfully.`,
+    sentCount,
+    totalCount: recipients.length,
+    failedEmails
+  });
+});
+
 // ==========================================
 // CONTENT & DATA ROUTES (CRUD)
 // ==========================================

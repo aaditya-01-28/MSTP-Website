@@ -10,6 +10,8 @@ const PrivacyTab = () => {
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [message, setMessage] = useState('');
   const [activeSecIdx, setActiveSecIdx] = useState(0);
 
   useEffect(() => {
@@ -55,6 +57,7 @@ const PrivacyTab = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
+    setMessage('');
     try {
       const token = localStorage.getItem('adminToken');
       const res = await fetch(`${API_BASE_URL}/api/privacy`, {
@@ -66,14 +69,15 @@ const PrivacyTab = () => {
         body: JSON.stringify(formData)
       });
       if (res.ok) {
-        alert('Privacy Policy updated successfully!');
+        setMessage('Privacy Policy updated successfully!');
+        setIsEditing(false);
         fetchPrivacyPolicy();
       } else {
-        alert('Failed to update Privacy Policy.');
+        setMessage('Failed to update Privacy Policy.');
       }
     } catch (err) {
       console.error(err);
-      alert('An error occurred while saving.');
+      setMessage('An error occurred while saving.');
     } finally {
       setSaving(false);
     }
@@ -86,24 +90,71 @@ const PrivacyTab = () => {
   return (
     <div className="admin-tab-content">
       <div className="tab-header">
-        <h2>Edit Privacy Policy</h2>
-        <button onClick={handleSubmit} disabled={saving} className="btn btn-primary">
-          {saving ? 'Saving...' : 'Save Changes'}
-        </button>
+        <div>
+          <h2>Privacy Policy</h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '4px' }}>
+            {isEditing ? 'Editing mode active. Make changes below and click "Save Changes".' : 'Privacy policy is locked. Click "Edit Privacy Policy" to make changes.'}
+          </p>
+        </div>
+
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          {isEditing ? (
+            <>
+              <button 
+                type="button" 
+                onClick={() => { fetchPrivacyPolicy(); setIsEditing(false); setMessage(''); }} 
+                className="btn btn-outline"
+              >
+                Cancel
+              </button>
+              <button 
+                type="button" 
+                onClick={handleSubmit} 
+                className="btn btn-primary" 
+                disabled={saving}
+              >
+                {saving ? 'Saving...' : 'Save Changes'}
+              </button>
+            </>
+          ) : (
+            <button 
+              type="button" 
+              onClick={() => setIsEditing(true)} 
+              className="btn btn-primary"
+            >
+              Edit Privacy Policy
+            </button>
+          )}
+        </div>
       </div>
+
+      {message && (
+        <div style={{
+          padding: '12px 16px', 
+          backgroundColor: message.includes('successfully') ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)', 
+          border: `1px solid ${message.includes('successfully') ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`,
+          marginTop: '1.5rem', 
+          borderRadius: '8px', 
+          color: message.includes('successfully') ? '#10b981' : '#ef4444',
+          fontWeight: 600
+        }}>
+          {message}
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '2rem', marginTop: '1.5rem' }}>
         
         {/* General Details card */}
         <div className="admin-card">
           <h3>Header Settings</h3>
-          <div className="form-group" style={{ marginBottom: '1.2rem' }}>
+          <div className="form-group" style={{ marginBottom: '1.2rem', marginTop: '1rem' }}>
             <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '6px' }}>Policy Title *</label>
             <input 
               type="text" 
               name="title" 
               value={formData.title} 
               onChange={handleGeneralChange} 
+              disabled={!isEditing}
               required 
               className="admin-input" 
               style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid var(--border-color)', background: 'var(--bg-secondary)', color: 'var(--text-primary)' }}
@@ -116,6 +167,7 @@ const PrivacyTab = () => {
               name="subtitle" 
               value={formData.subtitle} 
               onChange={handleGeneralChange} 
+              disabled={!isEditing}
               required 
               className="admin-input"
               style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid var(--border-color)', background: 'var(--bg-secondary)', color: 'var(--text-primary)' }}
@@ -127,6 +179,7 @@ const PrivacyTab = () => {
               name="introText" 
               value={formData.introText} 
               onChange={handleGeneralChange} 
+              disabled={!isEditing}
               required 
               rows={4}
               className="admin-textarea"
@@ -178,6 +231,7 @@ const PrivacyTab = () => {
                       type="text" 
                       value={formData.sections[activeSecIdx].title || ''} 
                       onChange={(e) => handleSectionContentChange(activeSecIdx, 'title', e.target.value)} 
+                      disabled={!isEditing}
                       required 
                       style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid var(--border-color)', background: 'var(--bg-secondary)', color: 'var(--text-primary)' }}
                     />
@@ -193,12 +247,14 @@ const PrivacyTab = () => {
                             type="text" 
                             value={formData.sections[activeSecIdx].col1Title || ''} 
                             onChange={(e) => handleSectionContentChange(activeSecIdx, 'col1Title', e.target.value)} 
+                            disabled={!isEditing}
                             style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid var(--border-color)', background: 'var(--bg-secondary)', color: 'var(--text-primary)' }}
                           />
                           <label style={{ fontWeight: 'bold', display: 'block', marginTop: '12px', marginBottom: '6px' }}>Col 2.1 Content (use • for bullets) *</label>
                           <textarea 
                             value={formData.sections[activeSecIdx].col1Content || ''} 
                             onChange={(e) => handleSectionContentChange(activeSecIdx, 'col1Content', e.target.value)} 
+                            disabled={!isEditing}
                             rows={6}
                             style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid var(--border-color)', background: 'var(--bg-secondary)', color: 'var(--text-primary)', resize: 'vertical' }}
                           />
@@ -209,12 +265,14 @@ const PrivacyTab = () => {
                             type="text" 
                             value={formData.sections[activeSecIdx].col2Title || ''} 
                             onChange={(e) => handleSectionContentChange(activeSecIdx, 'col2Title', e.target.value)} 
+                            disabled={!isEditing}
                             style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid var(--border-color)', background: 'var(--bg-secondary)', color: 'var(--text-primary)' }}
                           />
                           <label style={{ fontWeight: 'bold', display: 'block', marginTop: '12px', marginBottom: '6px' }}>Col 2.2 Content (use • for bullets) *</label>
                           <textarea 
                             value={formData.sections[activeSecIdx].col2Content || ''} 
                             onChange={(e) => handleSectionContentChange(activeSecIdx, 'col2Content', e.target.value)} 
+                            disabled={!isEditing}
                             rows={6}
                             style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid var(--border-color)', background: 'var(--bg-secondary)', color: 'var(--text-primary)', resize: 'vertical' }}
                           />
@@ -227,6 +285,7 @@ const PrivacyTab = () => {
                       <textarea 
                         value={formData.sections[activeSecIdx].content || ''} 
                         onChange={(e) => handleSectionContentChange(activeSecIdx, 'content', e.target.value)} 
+                        disabled={!isEditing}
                         required 
                         rows={8}
                         style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid var(--border-color)', background: 'var(--bg-secondary)', color: 'var(--text-primary)', resize: 'vertical' }}
@@ -239,6 +298,7 @@ const PrivacyTab = () => {
                     <select
                       value={formData.sections[activeSecIdx].iconName || 'Shield'}
                       onChange={(e) => handleSectionContentChange(activeSecIdx, 'iconName', e.target.value)}
+                      disabled={!isEditing}
                       style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid var(--border-color)', background: 'var(--bg-secondary)', color: 'var(--text-primary)' }}
                     >
                       <option value="FileText">FileText (Introduction)</option>
