@@ -58,6 +58,14 @@ const localServiceIcons = {
   'dex': gifDex
 };
 
+// Process images
+import consultationImg from '../assets/portfolio/consultation.png';
+import planningImg from '../assets/portfolio/planning.png';
+import developmentImg from '../assets/portfolio/development.png';
+import testingImg from '../assets/portfolio/testing.png';
+import deploymentImg from '../assets/portfolio/deployment.png';
+import supportImg from '../assets/portfolio/support.png';
+
 // Tech stack images
 import nodeImg from '../assets/tech_logo/node.png';
 import dockerImg from '../assets/tech_logo/docker.png';
@@ -112,6 +120,14 @@ import metaAdsImg from '../assets/tech_logo/metaads.png';
 import openaiImg from '../assets/tech_logo/openai.png';
 import powerbiImg from '../assets/tech_logo/powerbi.png';
 
+import cloudcomputingImg from '../assets/tech_logo/cloudcomputing.png';
+import cybersecurityImg from '../assets/tech_logo/cybersecurity.png';
+import sqlImg from '../assets/tech_logo/sql.png';
+import pfsenseImg from '../assets/tech_logo/pfSense.png';
+import clarityImg from '../assets/tech_logo/Clarity.png';
+import grafanaImg from '../assets/tech_logo/Grafana.png';
+import sqlalchemyImg from '../assets/tech_logo/SQLAlchemy.png';
+
 const localTechIcons = {
   'react': reactImg,
   'reactjs': reactImg,
@@ -141,10 +157,13 @@ const localTechIcons = {
   'apple': appleImg,
   'arduino': arduinoImg,
   'c++': cppImg,
+  'cpp': cppImg,
+  'cplusplus': cppImg,
   'cypress': cypressImg,
   'ethereum': ethereumImg,
   'flutter': flutterImg,
   'google ads': googleAdsImg,
+  'googleads': googleAdsImg,
   'hardhat': hardhatImg,
   'junit': junitImg,
   'java': javaImg,
@@ -157,6 +176,7 @@ const localTechIcons = {
   'pandas': pandasImg,
   'paypal': paypalImg,
   'postgresql': postgresImg,
+  'postgres': postgresImg,
   'postman': postmanImg,
   'pytorch': pytorchImg,
   'python': pythonImg,
@@ -176,18 +196,44 @@ const localTechIcons = {
   'wordpress': wordpressImg,
   'github': githubImg,
   'meta ads': metaAdsImg,
+  'metaads': metaAdsImg,
   'openai': openaiImg,
   'powerbi': powerbiImg,
-  'tableau': powerbiImg
+  'tableau': powerbiImg,
+  'cloud computing': cloudcomputingImg,
+  'cloud': cloudcomputingImg,
+  'cyber security': cybersecurityImg,
+  'cybersecurity': cybersecurityImg,
+  'sql': sqlImg,
+  'pfsense': pfsenseImg,
+  'clarity': clarityImg,
+  'grafana': grafanaImg,
+  'sqlalchemy': sqlalchemyImg
 };
 
-const processIcons = [
-  <MessageSquare size={48} strokeWidth={1.5} />,
-  <LayoutList size={48} strokeWidth={1.5} />,
-  <Code2 size={48} strokeWidth={1.5} />,
-  <TestTube size={48} strokeWidth={1.5} />,
-  <Rocket size={48} strokeWidth={1.5} />,
-  <Settings size={48} strokeWidth={1.5} />
+const processIconsMap = {
+  'consultation': consultationImg,
+  'info': consultationImg,
+  'information': consultationImg,
+  'planning': planningImg,
+  'research': planningImg,
+  'design': planningImg,
+  'development': developmentImg,
+  'dev': developmentImg,
+  'testing': testingImg,
+  'test': testingImg,
+  'deployment': deploymentImg,
+  'deploy': deploymentImg,
+  'support': supportImg
+};
+
+const defaultProcessIcons = [
+  consultationImg,
+  planningImg,
+  developmentImg,
+  testingImg,
+  deploymentImg,
+  supportImg
 ];
 
 const ServiceTemplate = () => {
@@ -287,14 +333,21 @@ const ServiceTemplate = () => {
         <div className="container">
           <h2 className="section-title">Our Process</h2>
           <div className="process-cycle">
-            {service.processSteps && service.processSteps.map((step, idx) => (
-              <div className="process-step" key={idx}>
-                <div className="process-circle" style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
-                  {processIcons[idx % processIcons.length]}
+            {service.processSteps && service.processSteps.map((step, idx) => {
+              const stepTitle = typeof step === 'object' ? step.title : step;
+              const stepName = (stepTitle || '').toLowerCase();
+              const matchedKey = Object.keys(processIconsMap).find(k => stepName.includes(k));
+              const processImg = matchedKey ? processIconsMap[matchedKey] : defaultProcessIcons[idx % defaultProcessIcons.length];
+
+              return (
+                <div className="process-step" key={idx}>
+                  <div className="process-circle" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-secondary)', border: '2px solid var(--accent-primary)', width: '84px', height: '84px', borderRadius: '50%', padding: '14px', boxShadow: '0 4px 15px rgba(0,0,0,0.1)' }}>
+                    <img src={processImg} alt={stepTitle} style={{ width: '48px', height: '48px', objectFit: 'contain' }} />
+                  </div>
+                  <span>{stepTitle}</span>
                 </div>
-                <span>{typeof step === 'object' ? step.title : step}</span>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -313,11 +366,18 @@ const ServiceTemplate = () => {
               return (
                 <div className="tech-item" key={idx}>
                   {techIcon ? (
-                    <img src={techIcon} alt={techName} style={{width: '56px', height: '56px', objectFit: 'contain'}} />
+                    <img 
+                      src={techIcon} 
+                      alt={techName} 
+                      className="tech-logo-img" 
+                      style={{ maxHeight: '48px', maxWidth: '85px', minHeight: '36px', objectFit: 'contain' }} 
+                    />
                   ) : (
-                    <Cpu size={48} color="var(--accent-primary)" />
+                    <div className="tech-icon-fallback">
+                      <Cpu size={32} color="var(--accent-primary)" />
+                    </div>
                   )}
-                  <span>{techName}</span>
+                  <span className="tech-name-label">{techName}</span>
                 </div>
               );
             })}

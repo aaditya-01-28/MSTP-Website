@@ -14,23 +14,156 @@ import satoshiGif from '../assets/portfolio/STF Gold.gif';
 import rccmGif from '../assets/portfolio/BCCM Global_A2.gif';
 import samraatGif from '../assets/portfolio/SAMRAAT LOGS_ A1.gif';
 
-import figmaImg from '../assets/tech_logo/figma.png';
-import reactImg from '../assets/tech_logo/react.png';
+// Process images
+import consultationImg from '../assets/portfolio/consultation.png';
+import planningImg from '../assets/portfolio/planning.png';
+import developmentImg from '../assets/portfolio/development.png';
+import testingImg from '../assets/portfolio/testing.png';
+import deploymentImg from '../assets/portfolio/deployment.png';
+import supportImg from '../assets/portfolio/support.png';
+
+// Tech stack images
 import nodeImg from '../assets/tech_logo/node.png';
-import mongoImg from '../assets/tech_logo/mongodb.png';
-import awsImg from '../assets/tech_logo/aws.png';
 import dockerImg from '../assets/tech_logo/docker.png';
+import kubernetesImg from '../assets/tech_logo/kubernatives.png';
+import reactImg from '../assets/tech_logo/react.png';
+import awsImg from '../assets/tech_logo/aws.png';
+import figmaImg from '../assets/tech_logo/figma.png';
+import gcpImg from '../assets/tech_logo/gcp.png';
+import linuxImg from '../assets/tech_logo/linux.png';
+import mongoImg from '../assets/tech_logo/mongodb.png';
+import mysqlImg from '../assets/tech_logo/mysql.png';
+import phpImg from '../assets/tech_logo/php.png';
+import azureImg from '../assets/tech_logo/azure.png';
+import androidImg from '../assets/tech_logo/Android.png';
+import appleImg from '../assets/tech_logo/Apple.png';
+import arduinoImg from '../assets/tech_logo/Arduino.png';
+import cppImg from '../assets/tech_logo/C++ (CPlusPlus).png';
+import cypressImg from '../assets/tech_logo/Cypress.png';
+import ethereumImg from '../assets/tech_logo/Ethereum.png';
+import flutterImg from '../assets/tech_logo/Flutter.png';
+import googleAdsImg from '../assets/tech_logo/Googleads.png';
+import hardhatImg from '../assets/tech_logo/Hardhat.png';
+import junitImg from '../assets/tech_logo/JUnit.png';
+import javaImg from '../assets/tech_logo/Java.png';
+import jestImg from '../assets/tech_logo/Jest.png';
+import kotlinImg from '../assets/tech_logo/Kotlin.png';
+import nginxImg from '../assets/tech_logo/NGINX.png';
+import nextjsImg from '../assets/tech_logo/Next.js.png';
+import oracleImg from '../assets/tech_logo/Oracle.png';
+import pandasImg from '../assets/tech_logo/Pandas.png';
+import paypalImg from '../assets/tech_logo/PayPal.png';
+import postgresImg from '../assets/tech_logo/PostgresSQL.png';
+import postmanImg from '../assets/tech_logo/Postman.png';
+import pytorchImg from '../assets/tech_logo/PyTorch.png';
+import pythonImg from '../assets/tech_logo/Python.png';
+import raspberryImg from '../assets/tech_logo/Raspberry Pi.png';
+import redisImg from '../assets/tech_logo/Redis.png';
+import salesforceImg from '../assets/tech_logo/Salesforce.png';
+import seleniumImg from '../assets/tech_logo/Selenium.png';
+import shopifyImg from '../assets/tech_logo/Shopify.png';
+import socketioImg from '../assets/tech_logo/Socket.io.png';
+import solidityImg from '../assets/tech_logo/Solidity.png';
+import stripeImg from '../assets/tech_logo/Stripe.png';
+import swiftImg from '../assets/tech_logo/Swift.png';
+import tensorflowImg from '../assets/tech_logo/TensorFlow.png';
+import typescriptImg from '../assets/tech_logo/TypeScript.png';
+import woocommerceImg from '../assets/tech_logo/WooCommerce.png';
+import wordpressImg from '../assets/tech_logo/WordPress.png';
+import githubImg from '../assets/tech_logo/github.png';
+import metaAdsImg from '../assets/tech_logo/metaads.png';
+import openaiImg from '../assets/tech_logo/openai.png';
+import powerbiImg from '../assets/tech_logo/powerbi.png';
+import cloudcomputingImg from '../assets/tech_logo/cloudcomputing.png';
+import cybersecurityImg from '../assets/tech_logo/cybersecurity.png';
+import sqlImg from '../assets/tech_logo/sql.png';
+import pfsenseImg from '../assets/tech_logo/pfSense.png';
+import clarityImg from '../assets/tech_logo/Clarity.png';
+import grafanaImg from '../assets/tech_logo/Grafana.png';
+import sqlalchemyImg from '../assets/tech_logo/SQLAlchemy.png';
 import defaultUserImg from '../assets/contactus/user.png';
 
 const localTechIcons = {
-  'figma': figmaImg,
   'react': reactImg,
+  'reactjs': reactImg,
+  'react.js': reactImg,
+  'react native': reactImg,
+  'nextjs': nextjsImg,
+  'next.js': nextjsImg,
   'node': nodeImg,
-  'node.js': nodeImg,
   'nodejs': nodeImg,
-  'mongodb': mongoImg,
+  'node.js': nodeImg,
   'aws': awsImg,
-  'docker': dockerImg
+  'aws iot core': awsImg,
+  'docker': dockerImg,
+  'kubernetes': kubernetesImg,
+  'figma': figmaImg,
+  'gcp': gcpImg,
+  'google cloud platform': gcpImg,
+  'linux': linuxImg,
+  'mongodb': mongoImg,
+  'mysql': mysqlImg,
+  'php': phpImg,
+  'azure': azureImg,
+  'microsoft azure': azureImg,
+  'android': androidImg,
+  'ios / android': androidImg,
+  'ios': appleImg,
+  'apple': appleImg,
+  'arduino': arduinoImg,
+  'c++': cppImg,
+  'cpp': cppImg,
+  'cplusplus': cppImg,
+  'cypress': cypressImg,
+  'ethereum': ethereumImg,
+  'flutter': flutterImg,
+  'google ads': googleAdsImg,
+  'googleads': googleAdsImg,
+  'hardhat': hardhatImg,
+  'junit': junitImg,
+  'java': javaImg,
+  'jest': jestImg,
+  'kotlin': kotlinImg,
+  'nginx': nginxImg,
+  'oracle db': oracleImg,
+  'oracle': oracleImg,
+  'oracle erp cloud': oracleImg,
+  'pandas': pandasImg,
+  'paypal': paypalImg,
+  'postgresql': postgresImg,
+  'postgres': postgresImg,
+  'postman': postmanImg,
+  'pytorch': pytorchImg,
+  'python': pythonImg,
+  'raspberry pi': raspberryImg,
+  'redis': redisImg,
+  'salesforce': salesforceImg,
+  'sales cloud': salesforceImg,
+  'selenium': seleniumImg,
+  'shopify': shopifyImg,
+  'socket.io': socketioImg,
+  'solidity': solidityImg,
+  'stripe': stripeImg,
+  'swift': swiftImg,
+  'tensorflow': tensorflowImg,
+  'typescript': typescriptImg,
+  'woocommerce': woocommerceImg,
+  'wordpress': wordpressImg,
+  'github': githubImg,
+  'meta ads': metaAdsImg,
+  'metaads': metaAdsImg,
+  'openai': openaiImg,
+  'powerbi': powerbiImg,
+  'tableau': powerbiImg,
+  'cloud computing': cloudcomputingImg,
+  'cloud': cloudcomputingImg,
+  'cyber security': cybersecurityImg,
+  'cybersecurity': cybersecurityImg,
+  'sql': sqlImg,
+  'pfsense': pfsenseImg,
+  'clarity': clarityImg,
+  'grafana': grafanaImg,
+  'sqlalchemy': sqlalchemyImg
 };
 
 const localPortfolioImages = {
@@ -76,12 +209,12 @@ const CaseStudy = () => {
 
   // Icons for Process section
   const processSteps = [
-    { name: 'Gathering Information', icon: <FileText size={24} /> },
-    { name: 'Research', icon: <Search size={24} /> },
-    { name: 'Design', icon: <Layout size={24} /> },
-    { name: 'Development', icon: <Code size={24} /> },
-    { name: 'Testing', icon: <PlayCircle size={24} /> },
-    { name: 'Deploy', icon: <Rocket size={24} /> }
+    { name: 'Consultation', icon: <img src={consultationImg} alt="Consultation" style={{ width: '32px', height: '32px', objectFit: 'contain' }} /> },
+    { name: 'Planning', icon: <img src={planningImg} alt="Planning" style={{ width: '32px', height: '32px', objectFit: 'contain' }} /> },
+    { name: 'Development', icon: <img src={developmentImg} alt="Development" style={{ width: '32px', height: '32px', objectFit: 'contain' }} /> },
+    { name: 'Testing', icon: <img src={testingImg} alt="Testing" style={{ width: '32px', height: '32px', objectFit: 'contain' }} /> },
+    { name: 'Deployment', icon: <img src={deploymentImg} alt="Deployment" style={{ width: '32px', height: '32px', objectFit: 'contain' }} /> },
+    { name: 'Support', icon: <img src={supportImg} alt="Support" style={{ width: '32px', height: '32px', objectFit: 'contain' }} /> }
   ];
 
   const heroImage = project.image || localPortfolioImages[project.id];
