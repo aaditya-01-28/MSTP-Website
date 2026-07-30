@@ -143,7 +143,7 @@ router.get('/settings', async (req, res) => {
   }
 });
 
-router.post('/settings', authMiddleware, async (req, res) => {
+const handleSaveSettings = async (req, res) => {
   try {
     let settings = await SiteSettings.findOne();
     if (settings) {
@@ -156,7 +156,10 @@ router.post('/settings', authMiddleware, async (req, res) => {
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
-});
+};
+
+router.post('/settings', authMiddleware, handleSaveSettings);
+router.put('/settings', authMiddleware, handleSaveSettings);
 
 // Route to get PrivacyPolicy (Singleton)
 router.get('/privacy', async (req, res) => {

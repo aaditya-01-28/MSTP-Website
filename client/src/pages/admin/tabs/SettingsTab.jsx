@@ -117,7 +117,7 @@ const SettingsTab = () => {
                 className="btn btn-primary" 
                 disabled={saving}
               >
-                {saving ? 'Saving...' : '💾 Save Settings'}
+                {saving ? 'Saving...' : 'Save Settings'}
               </button>
             </>
           ) : (
@@ -126,7 +126,7 @@ const SettingsTab = () => {
               onClick={() => setIsEditing(true)} 
               className="btn btn-primary"
             >
-              ✏️ Edit Settings
+              Edit Settings
             </button>
           )}
         </div>
@@ -196,15 +196,9 @@ const SettingsTab = () => {
         </div>
       </div>
 
-      <div style={{marginTop: '2rem'}}>
+      <div style={{marginTop: '2rem', marginBottom: '4rem'}}>
         <h3>About Us Text (Shown on Careers Page)</h3>
         <textarea name="aboutUsText" value={settings.aboutUsText || ''} onChange={handleChange} disabled={!isEditing} className="admin-input" rows="5" style={{ marginTop: '0.8rem' }}></textarea>
-      </div>
-
-      <div style={{marginTop: '2rem', marginBottom: '4rem'}}>
-        <h3>Privacy Policy</h3>
-        <p style={{color: 'var(--text-secondary)', marginBottom: '0.8rem', marginTop: '4px', fontSize: '0.9rem'}}>Enter the full privacy policy text here. Line breaks will be preserved.</p>
-        <textarea name="privacyPolicy" value={settings.privacyPolicy || ''} onChange={handleChange} disabled={!isEditing} className="admin-input" rows="12"></textarea>
       </div>
     </div>
   );

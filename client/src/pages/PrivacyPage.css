@@ -4,6 +4,7 @@
   background-color: var(--bg-primary);
   color: var(--text-primary);
   min-height: 100vh;
+  padding-top: var(--header-height);
 }
 
 .privacy-header-card {
