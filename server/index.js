@@ -349,6 +349,7 @@ app.post('/api/admin/bulk-reply', authMiddleware, async (req, res) => {
 
   let sentCount = 0;
   const failedEmails = [];
+  let lastErrorMessage = '';
   const currentDateStr = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
   for (const item of recipients) {
@@ -379,12 +380,19 @@ app.post('/api/admin/bulk-reply', authMiddleware, async (req, res) => {
       sentCount++;
     } catch (err) {
       console.error(`Failed to send bulk email to ${targetEmail}:`, err);
+      lastErrorMessage = err.message || err.toString();
       failedEmails.push(targetEmail);
     }
   }
 
+  if (sentCount === 0) {
+    return res.status(500).json({ 
+      error: `Failed to send email to any recipient. SMTP Error: ${lastErrorMessage || 'Please check email configuration (EMAIL_USER / EMAIL_PASS).'}` 
+    });
+  }
+
   res.json({
-    message: `Bulk reply completed. Sent ${sentCount} of ${recipients.length} emails successfully.`,
+    message: `Bulk reply completed. Sent ${sentCount} of ${recipients.length} emails successfully.${failedEmails.length > 0 ? ` Failed: ${failedEmails.join(', ')}` : ''}`,
     sentCount,
     totalCount: recipients.length,
     failedEmails

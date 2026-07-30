@@ -10,8 +10,12 @@ const BulkReplyTab = () => {
   const [statusFilter, setStatusFilter] = useState('All');
   const [search, setSearch] = useState('');
   
-  const [selectedEmails, setSelectedEmails] = useState(new Set());
+  // Track selected items by unique record ID instead of raw email string
+  const [selectedIds, setSelectedIds] = useState(new Set());
   
+  // Track specific recipient ID to preview in live email preview
+  const [previewId, setPreviewId] = useState('');
+
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   
@@ -92,41 +96,41 @@ const BulkReplyTab = () => {
     return matchesStatus && matchesSearch;
   });
 
-  // Select / Deselect handlers
+  // Select / Deselect handlers using unique IDs
   const handleSelectAll = (e) => {
     if (e.target.checked) {
-      const allEmails = new Set(filteredList.map(item => item.email));
-      setSelectedEmails(allEmails);
+      const allIds = new Set(filteredList.map(item => item.id));
+      setSelectedIds(allIds);
+      if (filteredList.length > 0) setPreviewId(filteredList[0].id);
     } else {
-      setSelectedEmails(new Set());
+      setSelectedIds(new Set());
+      setPreviewId('');
     }
   };
 
-  const handleToggleSelect = (email) => {
-    setSelectedEmails(prev => {
+  const handleToggleSelect = (id) => {
+    setSelectedIds(prev => {
       const next = new Set(prev);
-      if (next.has(email)) {
-        next.delete(email);
+      if (next.has(id)) {
+        next.delete(id);
       } else {
-        next.add(email);
+        next.add(id);
+        setPreviewId(id); // Automatically switch preview to newly selected recipient
       }
       return next;
     });
   };
 
-  // Insert dynamic placeholder tags into active input
-  const insertTag = (tag, field) => {
-    if (field === 'subject') {
-      setSubject(prev => `${prev} ${tag}`);
-    } else {
-      setMessage(prev => `${prev} ${tag}`);
-    }
-  };
+  // Selected items list
+  const selectedItems = filteredList.filter(item => selectedIds.has(item.id));
 
-  // Get preview data for the first selected item
+  // Get preview item based on previewId or fallback to 1st selected item
   const getPreviewItem = () => {
-    const selectedList = filteredList.filter(item => selectedEmails.has(item.email));
-    return selectedList[0] || filteredList[0] || null;
+    if (previewId) {
+      const found = filteredList.find(item => item.id === previewId);
+      if (found) return found;
+    }
+    return selectedItems[0] || filteredList[0] || null;
   };
 
   const previewItem = getPreviewItem();
@@ -142,10 +146,19 @@ const BulkReplyTab = () => {
       .replace(/\{date\}/g, currentDateStr);
   };
 
+  // Insert dynamic placeholder tags into active input
+  const insertTag = (tag, field) => {
+    if (field === 'subject') {
+      setSubject(prev => `${prev} ${tag}`);
+    } else {
+      setMessage(prev => `${prev} ${tag}`);
+    }
+  };
+
   // Send Bulk Email submit handler
   const handleSendBulk = async (e) => {
     e.preventDefault();
-    if (selectedEmails.size === 0) {
+    if (selectedIds.size === 0) {
       alert('Please select at least one recipient from the list.');
       return;
     }
@@ -154,20 +167,18 @@ const BulkReplyTab = () => {
       return;
     }
 
-    if (!window.confirm(`Are you sure you want to send this bulk email to ${selectedEmails.size} selected recipient(s)?`)) {
+    if (!window.confirm(`Are you sure you want to send this bulk email to ${selectedIds.size} selected item(s)?`)) {
       return;
     }
 
     setSending(true);
     setAlertInfo(null);
 
-    const recipientObjects = filteredList
-      .filter(item => selectedEmails.has(item.email))
-      .map(item => ({
-        email: item.email,
-        name: item.name,
-        firstName: item.firstName
-      }));
+    const recipientObjects = selectedItems.map(item => ({
+      email: item.email,
+      name: item.name,
+      firstName: item.firstName
+    }));
 
     try {
       const token = localStorage.getItem('adminToken');
@@ -190,25 +201,25 @@ const BulkReplyTab = () => {
           type: 'success',
           text: data.message || `Successfully sent ${data.sentCount} emails!`
         });
-        setSelectedEmails(new Set());
+        setSelectedIds(new Set());
       } else {
         setAlertInfo({
           type: 'error',
-          text: data.error || 'Failed to send bulk emails.'
+          text: data.error || 'Failed to send bulk emails. Please check SMTP settings on server.'
         });
       }
     } catch (err) {
       console.error(err);
       setAlertInfo({
         type: 'error',
-        text: 'An error occurred while sending emails.'
+        text: 'An error occurred while sending emails. Check server connection.'
       });
     } finally {
       setSending(false);
     }
   };
 
-  const isAllSelected = filteredList.length > 0 && filteredList.every(item => selectedEmails.has(item.email));
+  const isAllSelected = filteredList.length > 0 && filteredList.every(item => selectedIds.has(item.id));
 
   return (
     <div className="admin-tab-content">
@@ -222,11 +233,11 @@ const BulkReplyTab = () => {
 
         <button 
           onClick={handleSendBulk} 
-          disabled={sending || selectedEmails.size === 0} 
+          disabled={sending || selectedIds.size === 0} 
           className="btn btn-primary"
           style={{ minWidth: '150px' }}
         >
-          {sending ? 'Sending Emails...' : `Send to ${selectedEmails.size} Selected`}
+          {sending ? 'Sending Emails...' : `Send to ${selectedIds.size} Selected`}
         </button>
       </div>
 
@@ -253,21 +264,21 @@ const BulkReplyTab = () => {
             <button
               type="button"
               className={`btn-sm ${targetGroup === 'applications' ? 'btn-primary' : 'btn-outline'}`}
-              onClick={() => { setTargetGroup('applications'); setSelectedEmails(new Set()); }}
+              onClick={() => { setTargetGroup('applications'); setSelectedIds(new Set()); setPreviewId(''); }}
             >
               Job Applicants ({applications.length})
             </button>
             <button
               type="button"
               className={`btn-sm ${targetGroup === 'contacts' ? 'btn-primary' : 'btn-outline'}`}
-              onClick={() => { setTargetGroup('contacts'); setSelectedEmails(new Set()); }}
+              onClick={() => { setTargetGroup('contacts'); setSelectedIds(new Set()); setPreviewId(''); }}
             >
               Contact Inquiries ({contacts.length})
             </button>
             <button
               type="button"
               className={`btn-sm ${targetGroup === 'both' ? 'btn-primary' : 'btn-outline'}`}
-              onClick={() => { setTargetGroup('both'); setSelectedEmails(new Set()); }}
+              onClick={() => { setTargetGroup('both'); setSelectedIds(new Set()); setPreviewId(''); }}
             >
               Both ({applications.length + contacts.length})
             </button>
@@ -326,7 +337,7 @@ const BulkReplyTab = () => {
               Select Recipients ({filteredList.length})
             </h3>
             <span style={{ fontSize: '0.85rem', color: 'var(--accent-primary)', fontWeight: 600 }}>
-              {selectedEmails.size} Selected
+              {selectedIds.size} Selected
             </span>
           </div>
 
@@ -354,7 +365,7 @@ const BulkReplyTab = () => {
                 </thead>
                 <tbody>
                   {filteredList.map((item) => {
-                    const isChecked = selectedEmails.has(item.email);
+                    const isChecked = selectedIds.has(item.id);
                     return (
                       <tr 
                         key={item.id} 
@@ -362,13 +373,13 @@ const BulkReplyTab = () => {
                           background: isChecked ? 'rgba(59, 130, 246, 0.06)' : 'transparent',
                           cursor: 'pointer'
                         }}
-                        onClick={() => handleToggleSelect(item.email)}
+                        onClick={() => handleToggleSelect(item.id)}
                       >
                         <td style={{ textAlign: 'center' }} onClick={(e) => e.stopPropagation()}>
                           <input
                             type="checkbox"
                             checked={isChecked}
-                            onChange={() => handleToggleSelect(item.email)}
+                            onChange={() => handleToggleSelect(item.id)}
                             style={{ cursor: 'pointer' }}
                           />
                         </td>
@@ -464,26 +475,50 @@ const BulkReplyTab = () => {
 
               <button 
                 type="submit" 
-                disabled={sending || selectedEmails.size === 0} 
+                disabled={sending || selectedIds.size === 0} 
                 className="btn btn-primary"
                 style={{ width: '100%', marginTop: '0.5rem' }}
               >
-                {sending ? 'Sending Bulk Email...' : `Send to ${selectedEmails.size} Selected Recipients`}
+                {sending ? 'Sending Bulk Email...' : `Send to ${selectedIds.size} Selected Items`}
               </button>
             </form>
           </div>
 
-          {/* Live Email Preview Card */}
+          {/* Live Sample Email Preview Card with Recipient Selector */}
           <div className="admin-card" style={{ background: 'var(--bg-secondary)', border: '1px dashed var(--accent-primary)' }}>
-            <h4 style={{ margin: '0 0 0.8rem 0', fontSize: '0.95rem', color: 'var(--accent-primary)', display: 'flex', justifyContent: 'space-between' }}>
-              <span>✉️ Live Email Preview</span>
-              <span style={{ fontSize: '0.8rem', fontWeight: 'normal', color: 'var(--text-secondary)' }}>
-                {previewItem ? `To: ${previewItem.email}` : 'No recipient selected'}
-              </span>
-            </h4>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.8rem' }}>
+              <h4 style={{ margin: 0, fontSize: '0.95rem', color: 'var(--accent-primary)' }}>
+                ✉️ Live Sample Email Preview
+              </h4>
+
+              {/* Preview Recipient Selector Dropdown */}
+              {selectedItems.length > 0 && (
+                <select
+                  value={previewItem ? previewItem.id : ''}
+                  onChange={(e) => setPreviewId(e.target.value)}
+                  style={{
+                    padding: '4px 8px',
+                    borderRadius: '4px',
+                    fontSize: '0.8rem',
+                    background: 'var(--bg-tertiary)',
+                    color: 'var(--text-primary)',
+                    border: '1px solid var(--border-color)'
+                  }}
+                >
+                  {selectedItems.map((item, idx) => (
+                    <option key={item.id} value={item.id}>
+                      Preview #{idx + 1}: {item.name} ({item.email})
+                    </option>
+                  ))}
+                </select>
+              )}
+            </div>
 
             <div style={{ fontSize: '0.9rem', color: 'var(--text-primary)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <div><strong>Subject:</strong> {renderPersonalized(subject) || <span style={{ color: 'var(--text-secondary)', italic: 'true' }}>Enter a subject line above...</span>}</div>
+              <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
+                <strong>To:</strong> {previewItem ? `${previewItem.name} <${previewItem.email}>` : 'No recipient selected'}
+              </div>
+              <div><strong>Subject:</strong> {renderPersonalized(subject) || <span style={{ color: 'var(--text-secondary)', fontStyle: 'italic' }}>Enter a subject line above...</span>}</div>
               <hr style={{ border: '0', height: '1px', background: 'var(--border-color)', margin: '0.4rem 0' }} />
               <div style={{ whiteSpace: 'pre-wrap', lineHeight: '1.6', color: 'var(--text-secondary)', fontSize: '0.88rem' }}>
                 {renderPersonalized(message) || 'Enter your message body above to preview output...'}
