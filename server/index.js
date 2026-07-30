@@ -31,11 +31,14 @@ mongoose.connect(process.env.MONGO_URI)
 const Contact = require('./models/Contact');
 
 // Nodemailer Transporter Configuration
+const cleanEmailPass = (process.env.EMAIL_PASS || '').replace(/^["']|["']$/g, '').trim();
+const cleanEmailUser = (process.env.EMAIL_USER || '').trim();
+
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
+    user: cleanEmailUser,
+    pass: cleanEmailPass
   }
 });
 
@@ -372,7 +375,7 @@ app.post('/api/admin/bulk-reply', authMiddleware, async (req, res) => {
 
     try {
       await transporter.sendMail({
-        from: process.env.EMAIL_USER,
+        from: cleanEmailUser,
         to: targetEmail,
         subject: personalizedSubject,
         text: personalizedMessage

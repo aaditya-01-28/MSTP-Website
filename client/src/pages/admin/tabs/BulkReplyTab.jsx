@@ -195,7 +195,13 @@ const BulkReplyTab = () => {
         })
       });
 
-      const data = await res.json();
+      let data = {};
+      try {
+        data = await res.json();
+      } catch (jsonErr) {
+        console.error('Failed to parse response JSON:', jsonErr);
+      }
+
       if (res.ok) {
         setAlertInfo({
           type: 'success',
@@ -205,14 +211,14 @@ const BulkReplyTab = () => {
       } else {
         setAlertInfo({
           type: 'error',
-          text: data.error || 'Failed to send bulk emails. Please check SMTP settings on server.'
+          text: data.error || `Server Error (${res.status}): Failed to send bulk emails. Please check SMTP settings on server.`
         });
       }
     } catch (err) {
       console.error(err);
       setAlertInfo({
         type: 'error',
-        text: 'An error occurred while sending emails. Check server connection.'
+        text: `Network / Request Error: ${err.message || 'Check server connection.'}`
       });
     } finally {
       setSending(false);
