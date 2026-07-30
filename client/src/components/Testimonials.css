@@ -113,15 +113,17 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: #4b5563;
+  background-color: var(--text-secondary);
+  opacity: 0.4;
   border: none;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
   padding: 0;
 }
 
 .pagination-dot.active {
-  background-color: #d1d5db;
+  background-color: var(--accent-primary);
+  opacity: 1;
 }
 
 /* Right Column */
@@ -161,9 +163,9 @@
 .illus-center-box {
   width: 180px;
   height: 120px;
-  border: 1px solid #4b5563;
+  border: 1px solid var(--border-color);
   border-radius: 12px;
-  background-color: #0a0a0a;
+  background-color: var(--bg-secondary);
   position: relative;
   z-index: 2;
   padding: 15px;
@@ -188,7 +190,8 @@
 
 .illus-line {
   height: 2px;
-  background-color: #4b5563;
+  background-color: var(--text-secondary);
+  opacity: 0.4;
   border-radius: 2px;
 }
 
@@ -203,14 +206,15 @@
 }
 .illus-user-line {
   height: 2px;
-  background-color: #4b5563;
+  background-color: var(--text-secondary);
+  opacity: 0.4;
   width: 40px;
   border-radius: 2px;
 }
 
 .illus-quote-icon {
   position: absolute;
-  color: #6b7280;
+  color: var(--text-secondary);
 }
 .left-quote {
   top: -10px;
@@ -225,12 +229,12 @@
   position: absolute;
   width: 40px;
   height: 40px;
-  border: 1px solid #4b5563;
+  border: 1px solid var(--border-color);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #111;
+  background-color: var(--bg-tertiary);
   z-index: 1;
 }
 

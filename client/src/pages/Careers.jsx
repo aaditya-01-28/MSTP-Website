@@ -89,7 +89,7 @@ const Careers = () => {
       {/* Open Roles Section - Theme Aware Grid Layout */}
       <section className="jobs-section section">
         <div className="container">
-          <h2 className="section-title" style={{fontSize: '2.5rem', marginBottom: '2rem'}}>Open Roles!</h2>
+          <h2 className="section-title" style={{fontSize: '2.5rem', marginBottom: '1rem'}}>Open Roles!</h2>
           
           <div className="jobs-search-bar">
             <Search className="search-icon" size={20} />

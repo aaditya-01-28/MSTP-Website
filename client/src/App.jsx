@@ -79,7 +79,7 @@ function AppContent({ theme, toggleTheme }) {
             
             {/* Admin Routes */}
             <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/admin/*" element={<AdminPanel />} />
+            <Route path="/admin/*" element={<AdminPanel theme={theme} toggleTheme={toggleTheme} />} />
           </Routes>
         </main>
         {!isAdmin && <Footer />}

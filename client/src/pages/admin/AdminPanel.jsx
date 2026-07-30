@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Briefcase, Layers, Folder, MessageSquare, Users, Settings, LogOut, 
-  FileText, Mail, Globe, ChevronDown, ChevronRight 
+  FileText, Mail, Globe, ChevronDown, ChevronRight, Sun, Moon 
 } from 'lucide-react';
 import './AdminPanel.css';
 
@@ -15,7 +15,7 @@ import SettingsTab from './tabs/SettingsTab';
 import ApplicationsTab from './tabs/ApplicationsTab';
 import ContactsTab from './tabs/ContactsTab';
 
-const AdminPanel = () => {
+const AdminPanel = ({ theme, toggleTheme }) => {
   const [activeTab, setActiveTab] = useState('applications');
   const [isWebsiteMgmtOpen, setIsWebsiteMgmtOpen] = useState(true);
   const navigate = useNavigate();
@@ -70,9 +70,16 @@ const AdminPanel = () => {
     <div className="admin-layout">
       {/* Sidebar */}
       <aside className="admin-sidebar">
-        <div className="admin-sidebar-header">
-          <img src="/logo.jpeg" alt="MAATRSHRI Logo" className="admin-sidebar-logo" />
-          <h2>MAATRSHRI Admin</h2>
+        <div className="admin-sidebar-header" style={{ justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <img src="/logo.jpeg" alt="MAATRSHRI Logo" className="admin-sidebar-logo" />
+            <h2>Admin</h2>
+          </div>
+          {toggleTheme && (
+            <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme" title="Toggle Light/Dark Theme">
+              {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+            </button>
+          )}
         </div>
 
         <nav className="admin-nav">

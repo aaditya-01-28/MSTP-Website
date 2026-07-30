@@ -11,6 +11,7 @@ import nikhilImg from '../assets/aboutus/nikhil.png';
 import dharmendraImg from '../assets/aboutus/dharmendra.png';
 import omImg from '../assets/aboutus/om.png';
 import sauravImg from '../assets/aboutus/saurav.png';
+import defaultUserImg from '../assets/contactus/user.png';
 
 const localTeamImages = {
   'Nitin Kumar Tiwari': nitinImg,
@@ -122,20 +123,14 @@ const About = () => {
             <div className="leader-card" style={{margin: '0 auto'}}>
               {(() => {
                 const member = leadershipTeam[currentLeader];
-                const img = member.image || localTeamImages[member.name];
+                const img = (member?.image && member.image.trim() !== '') ? member.image : (localTeamImages[member?.name] || defaultUserImg);
                 return (
                   <>
                     <div className="leader-image-wrapper">
-                      {img ? (
-                        <img src={img} alt={member.name} className="leader-img" style={{width: '200px', height: '200px', objectFit: 'cover', borderRadius: '50%'}} />
-                      ) : (
-                        <div className="leader-image-placeholder" style={{width: '200px', height: '200px', margin: '0 auto'}}>
-                          <span>{member.name.charAt(0)}</span>
-                        </div>
-                      )}
+                      <img src={img} alt={member?.name || 'Team Member'} className="leader-img" style={{width: '200px', height: '200px', objectFit: 'cover', borderRadius: '50%'}} />
                     </div>
-                    <h3 className="leader-name" style={{fontSize: '1.8rem'}}>{member.name}</h3>
-                    <p className="leader-role" style={{fontSize: '1.2rem'}}>{member.role}</p>
+                    <h3 className="leader-name" style={{fontSize: '1.8rem'}}>{member?.name}</h3>
+                    <p className="leader-role" style={{fontSize: '1.2rem'}}>{member?.role}</p>
                   </>
                 );
               })()}

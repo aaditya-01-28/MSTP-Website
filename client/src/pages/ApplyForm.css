@@ -443,24 +443,24 @@
 .btn-submit-application {
   width: 100%;
   padding: 1.1rem;
-  background-color: var(--accent-primary, #3b82f6);
-  color: #ffffff;
+  background-color: var(--accent-primary);
+  color: var(--text-dark, #171d2b);
   border: none;
   border-radius: 12px;
   font-size: 1.1rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.35);
+  box-shadow: var(--glow-shadow);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .btn-submit-application:hover:not(:disabled) {
-  background-color: #2563eb;
+  background-color: var(--accent-hover);
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.45);
+  box-shadow: var(--glow-shadow);
 }
 
 .btn-submit-application:disabled {

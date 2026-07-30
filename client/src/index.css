@@ -31,12 +31,12 @@
   
   --text-primary: #171d2b;   /* Dark navy text */
   --text-secondary: #4a5568; 
-  --text-dark: #F2EDE2;      
+  --text-dark: #171d2b;      
   
-  --accent-primary: #3b82f6; /* Blue buttons from screenshot */
-  --accent-hover: #2563eb;
+  --accent-primary: #D7B889; /* Brand Gold */
+  --accent-hover: #c9a56d;
   
-  --glow-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+  --glow-shadow: 0 0 15px rgba(215, 184, 137, 0.4);
   
   --border-color: rgba(23, 29, 43, 0.1);
 }

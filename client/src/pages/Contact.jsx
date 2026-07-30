@@ -130,7 +130,7 @@ const Contact = () => {
                     <textarea name="message" value={formData.message} onChange={handleChange} required rows="4" placeholder="Your message here..."></textarea>
                   </div>
                   
-                  <button type="submit" className="btn btn-primary submit-btn" style={{backgroundColor: '#3b82f6', border: 'none'}} disabled={status === 'submitting'}>
+                  <button type="submit" className="btn btn-primary submit-btn" style={{border: 'none'}} disabled={status === 'submitting'}>
                     {status === 'submitting' ? 'Sending...' : 'Send Message'}
                   </button>
                 </form>

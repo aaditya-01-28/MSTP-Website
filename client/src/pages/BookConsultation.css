@@ -76,7 +76,8 @@
 }
 
 .book-form .submit-btn {
-  background-color: #3b82f6;
+  background-color: var(--accent-primary);
+  color: var(--text-dark, #171d2b);
   min-width: 250px;
 }
 
