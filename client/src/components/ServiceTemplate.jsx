@@ -30,6 +30,33 @@ import gifExchange from '../assets/services/Exchange F.gif';
 import gifMLM from '../assets/services/MLM F.gif';
 import gifDex from '../assets/services/Dex Plat F.gif';
 
+// Import MP4 Videos
+import videoAI from '../assets/services/AI_service.mp4';
+import videoICO from '../assets/services/ICO_deve.mp4';
+import videoIT from '../assets/services/IT_servic.mp4';
+import videoSoftwareDev from '../assets/services/Software dev.mp4';
+import videoWeb3 from '../assets/services/WEB3 serv.mp4';
+import videoWebDev from '../assets/services/Website_dev.mp4';
+import videoCloud from '../assets/services/cloud_service.mp4';
+import videoDataAnalytics from '../assets/services/data_analy.mp4';
+import videoDatabase from '../assets/services/db_database.mp4';
+import videoDex from '../assets/services/decentralized_exchange.mp4';
+import videoDigital from '../assets/services/digital_market.mp4';
+import videoExchange from '../assets/services/exchange-deve.mp4';
+import videoIndustrial from '../assets/services/industrial auto.mp4';
+import videoIOT from '../assets/services/iot_serv.mp4';
+import videoMobileApp from '../assets/services/mobile app.mp4';
+import videoOracle from '../assets/services/oracle serv.mp4';
+import videoPayment from '../assets/services/payment_gateway_serv.mp4';
+import videoStaffing from '../assets/services/payroll_staffing.mp4';
+import videoSalesforce from '../assets/services/salesforce_serv.mp4';
+import videoShopify from '../assets/services/shopify.mp4';
+import videoSoftwareTesting from '../assets/services/soft_testing.mp4';
+import videoToken from '../assets/services/token dev.mp4';
+import videoDApp from '../assets/services/Dapp_decentralized appp.mp4';
+import videoMLM from '../assets/services/MLM- servicee.mp4';
+import videoWallet from '../assets/services/wallet-service.mp4';
+
 const localServiceIcons = {
   'it-services': gifIT,
   'salesforce-services': gifSalesforce,
@@ -56,6 +83,34 @@ const localServiceIcons = {
   'exchange': gifExchange,
   'mlm': gifMLM,
   'dex': gifDex
+};
+
+const localServiceVideos = {
+  'it-services': videoIT,
+  'salesforce-services': videoSalesforce,
+  'web-development': videoWebDev,
+  'mobile-app': videoMobileApp,
+  'digital-marketing': videoDigital,
+  'software-development': videoSoftwareDev,
+  'ai-services': videoAI,
+  'iot': videoIOT,
+  'database-design': videoDatabase,
+  'data-analytics': videoDataAnalytics,
+  'industrial-automation': videoIndustrial,
+  'software-testing': videoSoftwareTesting,
+  'staffing': videoStaffing,
+  'payment-gateway': videoPayment,
+  'cloud-hosting': videoCloud,
+  'shopify-wordpress': videoShopify,
+  'oracle': videoOracle,
+  'ico': videoICO,
+  'token': videoToken,
+  'web3': videoWeb3,
+  'dapp': videoDApp,
+  'wallet': videoWallet,
+  'exchange': videoExchange,
+  'mlm': videoMLM,
+  'dex': videoDex
 };
 
 // Process images
@@ -286,27 +341,40 @@ const ServiceTemplate = () => {
   if (loading) return <div style={{paddingTop: '120px', textAlign: 'center', minHeight: '60vh'}}>Loading service details...</div>;
   if (!service) return <div style={{paddingTop: '120px', textAlign: 'center', minHeight: '60vh'}}>Service not found.</div>;
 
+  const heroVideo = service.video || localServiceVideos[service.id] || (service.icon && typeof service.icon === 'string' && service.icon.endsWith('.mp4') ? service.icon : null);
   const heroImage = service.icon || localServiceIcons[service.id];
 
   return (
     <div className="service-page">
       {/* Hero Section */}
-      <section className="service-hero" style={{ padding: 0, borderBottom: 'none' }}>
-        {heroImage ? (
-          <div style={{ width: '100%', height: '380px', overflow: 'hidden', backgroundColor: 'var(--bg-tertiary)' }}>
-            <img src={heroImage} alt={service.title} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }} />
-          </div>
-        ) : (
-          <div className="container service-hero-content" style={{ padding: '5rem 0' }}>
-            <div className="service-hero-graphic">
-              <Code2 size={64} />
+      <section className="service-hero-media-wrapper">
+        <div className="service-hero-media-container">
+          {heroVideo ? (
+            <video
+              src={heroVideo}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="service-hero-video"
+            />
+          ) : heroImage ? (
+            <img src={heroImage} alt={service.title} className="service-hero-image" />
+          ) : (
+            <div className="service-hero-fallback">
+              <Code2 size={72} color="var(--accent-primary)" />
+            </div>
+          )}
+
+          {/* Dark Overlay with Animated Title */}
+          <div className="service-hero-overlay">
+            <div className="service-hero-overlay-content">
+              <span className="service-hero-badge">MAATRSHRI SERVICES</span>
+              <h1 key={`title-${service.id}`} className="service-hero-title-animated">{service.title}</h1>
+              <div key={`line-${service.id}`} className="service-hero-title-line"></div>
+              <p key={`desc-${service.id}`} className="service-hero-desc-animated">{service.description}</p>
             </div>
           </div>
-        )}
-        
-        <div className="container" style={{ padding: '2.5rem 1rem 1rem', textAlign: 'center' }}>
-          <h1 style={{ fontSize: '2.8rem', color: 'var(--accent-primary)', marginBottom: '1.2rem', fontWeight: 800 }}>{service.title}</h1>
-          <p className="service-description" style={{ maxWidth: '850px', margin: '0 auto', fontSize: '1.1rem', lineHeight: '1.75' }}>{service.description}</p>
         </div>
       </section>
 
