@@ -127,3 +127,66 @@ img {
 .section-title span {
   color: var(--accent-primary);
 }
+
+/* Global Responsive Breakpoints */
+@media (max-width: 992px) {
+  :root {
+    --header-height: 80px;
+  }
+
+  .container {
+    padding: 0 1.75rem;
+  }
+
+  .section {
+    padding: 4.5rem 0;
+  }
+
+  .section-title {
+    font-size: 2.2rem;
+    margin-bottom: 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --header-height: 74px;
+  }
+
+  .container {
+    padding: 0 1.25rem;
+  }
+
+  .section {
+    padding: 3.5rem 0;
+  }
+
+  .section-title {
+    font-size: 1.95rem;
+    margin-bottom: 2rem;
+  }
+
+  .btn {
+    padding: 0.75rem 1.4rem;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --header-height: 68px;
+  }
+
+  .container {
+    padding: 0 1rem;
+  }
+
+  .section {
+    padding: 2.75rem 0;
+  }
+
+  .section-title {
+    font-size: 1.7rem;
+    margin-bottom: 1.75rem;
+  }
+}

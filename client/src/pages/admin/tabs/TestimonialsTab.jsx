@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { API_BASE_URL } from '../../../apiConfig';
 import { exportToExcel } from '../../../utils/exportToExcel';
+import AdminPagination from '../components/AdminPagination';
 
 const TestimonialsTab = () => {
   const [testimonials, setTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   
@@ -114,7 +117,7 @@ const TestimonialsTab = () => {
           </tr>
         </thead>
         <tbody>
-          {testimonials.map(item => (
+          {testimonials.slice((currentPage - 1) * pageSize, (currentPage - 1) * pageSize + pageSize).map(item => (
             <tr key={item._id}>
               <td>{item.author}</td>
               <td>{item.role}</td>
@@ -130,6 +133,14 @@ const TestimonialsTab = () => {
           )}
         </tbody>
       </table>
+
+      {/* Pagination */}
+      <AdminPagination
+        currentPage={currentPage}
+        totalItems={testimonials.length}
+        pageSize={pageSize}
+        onPageChange={(page) => setCurrentPage(page)}
+      />
 
       {isModalOpen && (
         <div className="admin-modal-overlay">

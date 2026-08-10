@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { API_BASE_URL } from '../../../apiConfig';
 import { exportToExcel } from '../../../utils/exportToExcel';
+import AdminPagination from '../components/AdminPagination';
 
 const TeamTab = () => {
   const [team, setTeam] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   
@@ -113,7 +116,7 @@ const TeamTab = () => {
           </tr>
         </thead>
         <tbody>
-          {team.map(member => (
+          {team.slice((currentPage - 1) * pageSize, (currentPage - 1) * pageSize + pageSize).map(member => (
             <tr key={member._id}>
               <td>{member.name}</td>
               <td>{member.role}</td>
@@ -128,6 +131,14 @@ const TeamTab = () => {
           )}
         </tbody>
       </table>
+
+      {/* Pagination */}
+      <AdminPagination
+        currentPage={currentPage}
+        totalItems={team.length}
+        pageSize={pageSize}
+        onPageChange={(page) => setCurrentPage(page)}
+      />
 
       {isModalOpen && (
         <div className="admin-modal-overlay">

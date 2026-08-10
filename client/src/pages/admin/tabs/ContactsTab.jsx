@@ -1,16 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { API_BASE_URL } from '../../../apiConfig';
 import { exportToExcel } from '../../../utils/exportToExcel';
+import AdminPagination from '../components/AdminPagination';
 
 const ContactsTab = () => {
   const [contacts, setContacts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
   const [selectedContact, setSelectedContact] = useState(null);
   const [replyContact, setReplyContact] = useState(null);
   const [replySubject, setReplySubject] = useState('');
   const [replyMessage, setReplyMessage] = useState('');
   const [sendingReply, setSendingReply] = useState(false);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search]);
 
   useEffect(() => {
     fetchContacts();
@@ -154,7 +161,8 @@ const ContactsTab = () => {
           No contact inquiries found.
         </p>
       ) : (
-        <div className="data-table-wrapper" style={{ overflowX: 'auto' }}>
+        <>
+          <div className="data-table-wrapper" style={{ overflowX: 'auto' }}>
           <table className="data-table">
             <thead>
               <tr>
@@ -168,7 +176,7 @@ const ContactsTab = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredContacts.map(item => (
+              {filteredContacts.slice((currentPage - 1) * pageSize, (currentPage - 1) * pageSize + pageSize).map(item => (
                 <tr key={item._id}>
                   <td><strong>{item.name}</strong></td>
                   <td>{item.email}</td>
@@ -211,7 +219,16 @@ const ContactsTab = () => {
             </tbody>
           </table>
         </div>
-      )}
+
+        {/* Pagination */}
+        <AdminPagination
+          currentPage={currentPage}
+          totalItems={filteredContacts.length}
+          pageSize={pageSize}
+          onPageChange={(page) => setCurrentPage(page)}
+        />
+      </>
+    )}
 
       {/* Modal for full message details */}
       {selectedContact && (

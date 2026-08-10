@@ -321,7 +321,94 @@
 }
 
 @media (max-width: 768px) {
+  .service-hero-media-container {
+    height: 420px;
+  }
+
+  .service-hero-title-animated {
+    font-size: 2.2rem;
+  }
+
+  .service-hero-desc-animated {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .feature-card {
+    padding: 1.8rem 1.4rem;
+  }
+
   .process-circle::after {
     display: none;
+  }
+
+  .process-cycle {
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .tech-grid {
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .tech-item {
+    padding: 0.85rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .service-hero-media-container {
+    height: 360px;
+  }
+
+  .service-hero-badge {
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    padding: 4px 14px;
+    margin-bottom: 0.8rem;
+  }
+
+  .service-hero-title-animated {
+    font-size: 1.75rem;
+  }
+
+  .service-hero-title-line {
+    width: 60px;
+    margin: 0.5rem 0 0.8rem 0;
+  }
+
+  .service-hero-desc-animated {
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+
+  .process-step {
+    width: 130px;
+  }
+
+  .tech-item {
+    padding: 0.75rem 1.2rem;
+    border-radius: 30px;
+  }
+
+  .tech-name-label {
+    font-size: 0.95rem;
+  }
+
+  .tech-logo-img {
+    max-height: 38px;
+    max-width: 65px;
+    min-height: 28px;
+  }
+
+  .tech-icon-fallback {
+    width: 36px;
+    height: 36px;
   }
 }

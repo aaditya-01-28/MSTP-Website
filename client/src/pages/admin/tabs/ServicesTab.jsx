@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { API_BASE_URL } from '../../../apiConfig';
 import { exportToExcel } from '../../../utils/exportToExcel';
+import AdminPagination from '../components/AdminPagination';
 
 const ServicesTab = () => {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   
@@ -114,7 +117,7 @@ const ServicesTab = () => {
           </tr>
         </thead>
         <tbody>
-          {services.map(svc => (
+          {services.slice((currentPage - 1) * pageSize, (currentPage - 1) * pageSize + pageSize).map(svc => (
             <tr key={svc._id}>
               <td>{svc.id}</td>
               <td>{svc.title}</td>
@@ -130,6 +133,14 @@ const ServicesTab = () => {
           )}
         </tbody>
       </table>
+
+      {/* Pagination */}
+      <AdminPagination
+        currentPage={currentPage}
+        totalItems={services.length}
+        pageSize={pageSize}
+        onPageChange={(page) => setCurrentPage(page)}
+      />
 
       {isModalOpen && (
         <div className="admin-modal-overlay">

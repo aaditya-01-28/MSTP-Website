@@ -1,10 +1,18 @@
 /* Home Page Styles */
 
-/* Hero Section */
+/* Prevent horizontal scroll from full-bleed hero */
+.home {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Hero Section — Full Bleed Edge-to-Edge */
 .hero {
   padding-top: var(--header-height);
   position: relative;
   overflow: hidden;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
 }
 
 .hero::before {
@@ -22,9 +30,10 @@
   width: 100%;
   height: 100%;
   display: flex;
+  padding: 0;
+  margin: 0;
 }
 
-/* Abstract Cube Graphic & Slider Controls */
 .hero-graphic {
   position: relative;
   width: 100%;
@@ -36,39 +45,57 @@
 .hero-slider-wrapper {
   position: relative;
   width: 100%;
+  height: 85vh;
+  min-height: 600px;
+  max-height: 850px;
   background-color: #050b14;
   overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* Subtle dark gradient overlay for cinematic contrast and seamless blending */
+.hero-slider-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(5, 11, 20, 0.45) 0%, rgba(5, 11, 20, 0.15) 45%, rgba(5, 11, 20, 0.65) 100%);
+  pointer-events: none;
+  z-index: 2;
 }
 
 .hero-media-item {
   width: 100%;
-  height: 82vh;
-  min-height: 580px;
-  max-height: 88vh;
+  min-width: 100%;
+  height: 100%;
+  max-width: none; /* Override global img max-width: 100% */
   object-fit: cover;
-  object-position: center 25%;
+  object-position: center center;
   display: block;
   opacity: 0;
   transition: opacity 0.8s ease-in-out;
   position: absolute;
   top: 0;
   left: 0;
+  z-index: 1;
 }
 
 .hero-media-item:first-child,
 .hero-media-item.active {
-  position: relative;
   opacity: 1;
 }
 
 /* Hero Slider Arrows & Dots */
 .slider-arrow {
   position: absolute;
-  top: 45%;
+  top: 32%;
   transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(10, 15, 29, 0.55);
   color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(215, 184, 137, 0.4);
   border-radius: 50%;
   width: 44px;
   height: 44px;
@@ -78,36 +105,40 @@
   cursor: pointer;
   z-index: 10;
   transition: all 0.3s ease;
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .slider-arrow:hover {
-  background-color: var(--accent-primary, #3b82f6);
-  border-color: var(--accent-primary, #3b82f6);
+  background-color: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: var(--text-dark, #171d2b);
   transform: translateY(-50%) scale(1.1);
-  box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+  box-shadow: var(--glow-shadow);
 }
 
 .arrow-left {
-  left: 15px;
+  left: 20px;
 }
 
 .arrow-right {
-  right: 15px;
+  right: 20px;
 }
 
 .slider-dots {
   position: absolute;
-  bottom: 15px;
+  bottom: 130px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   gap: 8px;
   z-index: 10;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(5, 11, 20, 0.55);
   padding: 6px 14px;
   border-radius: 20px;
-  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .slider-dot {
@@ -122,119 +153,120 @@
 }
 
 .slider-dot.active {
-  background-color: var(--accent-primary, #3b82f6);
-  width: 28px;
+  background-color: var(--accent-primary);
+  border-color: var(--accent-primary);
+  width: 26px;
   border-radius: 10px;
 }
 
 /* Hero Text Overlay */
 .hero-text-overlay {
   position: absolute;
-  top: 40%;
+  top: 32%;
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
-  z-index: 15;
+  z-index: 10;
   width: 100%;
   pointer-events: none;
+  padding: 0 4.5rem;
 }
 
 .hero-title {
   color: #ffffff;
-  font-size: 4rem;
+  font-size: 3.8rem;
   font-weight: 800;
   text-transform: uppercase;
-  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.95);
   line-height: 1.15;
   letter-spacing: 1px;
 }
 
 .hero-title .highlight {
-  color: var(--accent-primary, #3b82f6);
+  color: var(--accent-primary);
 }
 
-/* Hero Services Cards (Overlaid on bottom of slider) */
+/* Hero Services Cards (Transparent HUD Cards Floating on Video) */
 .hero-overlay-container {
   position: absolute;
-  bottom: 20px;
+  bottom: 18px;
   left: 50%;
   transform: translateX(-50%);
-  width: 94%;
-  max-width: 1280px;
+  width: 95%;
+  max-width: 1350px;
   display: flex;
   justify-content: flex-start;
-  gap: 1rem;
-  z-index: 12;
+  gap: 0.85rem;
+  z-index: 15;
   flex-wrap: nowrap;
   overflow-x: auto;
   margin-top: 0;
   margin-bottom: 0;
-  padding: 0.5rem 0.5rem 10px 0.5rem;
+  padding: 0.4rem 0.5rem 8px 0.5rem;
   scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
 }
 
-/* Styled scrollbar for clean look and scrollability */
 .hero-overlay-container::-webkit-scrollbar {
-  height: 6px;
-}
-.hero-overlay-container::-webkit-scrollbar-thumb {
-  background: rgba(59, 130, 246, 0.6);
-  border-radius: 4px;
-}
-.hero-overlay-container::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 4px;
+  display: none;
 }
 
 .hero-overlay-card {
-  flex: 0 0 170px;
-  min-width: 160px;
-  max-width: 200px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 10px;
-  padding: 1.2rem 0.8rem;
+  flex: 0 0 155px;
+  min-width: 140px;
+  max-width: 185px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  padding: 1.1rem 0.75rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.8rem;
+  gap: 0.65rem;
   text-decoration: none;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  scroll-snap-align: start;
 }
 
 .hero-overlay-card:hover,
 .hero-overlay-card.active {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(215, 184, 137, 0.22);
   border-color: var(--accent-primary);
   transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(215, 184, 137, 0.35);
+  box-shadow: 0 12px 30px rgba(215, 184, 137, 0.4);
 }
 
 .overlay-icon-box {
-  color: var(--accent-primary);
+  color: var(--accent-primary, #D7B889);
   display: flex;
   align-items: center;
   justify-content: center;
   transition: transform 0.3s ease;
+  width: 36px;
+  height: 36px;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.7));
 }
 
 .hero-overlay-card:hover .overlay-icon-box {
-  transform: scale(1.1);
+  transform: scale(1.15);
 }
 
 .overlay-title {
-  color: #ffffff;
-  font-size: 0.8rem;
+  color: #ffffff !important;
+  font-size: 0.76rem;
   font-weight: 700;
   text-align: center;
   letter-spacing: 0.5px;
   line-height: 1.35;
   text-transform: uppercase;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.95);
 }
 
 .cube-wrapper {
@@ -427,33 +459,42 @@
 }
 
 @media (max-width: 992px) {
-  .hero-graphic {
-    flex-direction: column;
+  .hero-slider-wrapper {
+    height: 75vh;
+    min-height: 520px;
+    max-height: 650px;
+  }
+
+  .hero-text-overlay {
+    top: 28%;
+    padding: 0 3.5rem;
+  }
+
+  .hero-title {
+    font-size: 2.2rem;
+  }
+
+  .slider-arrow {
+    top: 28%;
+    width: 38px;
+    height: 38px;
+  }
+
+  .slider-dots {
+    bottom: 115px;
   }
 
   .hero-overlay-container {
-    position: relative;
-    bottom: auto;
-    left: auto;
-    transform: none;
-    width: 100%;
-    margin-top: 1.2rem;
-    padding: 0.5rem 1rem 1rem 1rem;
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    -webkit-overflow-scrolling: touch;
-    scroll-snap-type: x mandatory;
+    bottom: 16px;
+    gap: 0.75rem;
   }
 
   .hero-overlay-card {
-    flex: 0 0 160px;
-    min-width: 150px;
-    scroll-snap-align: start;
-    padding: 1.2rem 0.8rem;
+    flex: 0 0 145px;
+    min-width: 135px;
+    padding: 0.85rem 0.6rem;
     background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.28);
   }
 
   .reasons-grid {
@@ -463,9 +504,26 @@
 }
 
 @media (max-width: 768px) {
+  .hero-slider-wrapper {
+    height: 76vh;
+    min-height: 500px;
+    max-height: 600px;
+  }
+
+  .hero-text-overlay {
+    top: 24%;
+    padding: 0 3.2rem;
+  }
+
+  .hero-title {
+    font-size: 1.65rem;
+    line-height: 1.25;
+  }
+
   .slider-arrow {
-    width: 38px;
-    height: 38px;
+    top: 24%;
+    width: 32px;
+    height: 32px;
   }
 
   .arrow-left {
@@ -477,7 +535,7 @@
   }
 
   .slider-dots {
-    bottom: 10px;
+    bottom: 105px;
     padding: 4px 10px;
   }
 
@@ -490,7 +548,88 @@
     width: 20px;
   }
 
+  .hero-overlay-container {
+    bottom: 14px;
+    width: 96%;
+    gap: 0.65rem;
+  }
+
+  .hero-overlay-card {
+    flex: 0 0 135px;
+    min-width: 125px;
+    padding: 0.75rem 0.5rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+  }
+
+  .overlay-title {
+    font-size: 0.72rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-slider-wrapper {
+    height: 78vh;
+    min-height: 480px;
+    max-height: 560px;
+  }
+
+  .hero-text-overlay {
+    top: 22%;
+    padding: 0 2.8rem;
+  }
+
   .hero-title {
-    font-size: 2.2rem;
+    font-size: 1.4rem;
+    line-height: 1.25;
+  }
+
+  .slider-arrow {
+    top: 22%;
+    width: 28px;
+    height: 28px;
+  }
+
+  .arrow-left {
+    left: 6px;
+  }
+
+  .arrow-right {
+    right: 6px;
+  }
+
+  .slider-dots {
+    bottom: 95px;
+    padding: 3px 8px;
+  }
+
+  .slider-dot {
+    width: 7px;
+    height: 7px;
+  }
+
+  .slider-dot.active {
+    width: 18px;
+  }
+
+  .hero-overlay-container {
+    bottom: 10px;
+  }
+
+  .hero-overlay-card {
+    flex: 0 0 120px;
+    min-width: 115px;
+    padding: 0.7rem 0.45rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+  }
+
+  .overlay-icon-box {
+    width: 28px;
+    height: 28px;
+  }
+
+  .overlay-title {
+    font-size: 0.68rem;
   }
 }

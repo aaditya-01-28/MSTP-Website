@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { API_BASE_URL } from '../../../apiConfig';
 import { exportToExcel } from '../../../utils/exportToExcel';
+import AdminPagination from '../components/AdminPagination';
 
 const CareersTab = () => {
   const [careers, setCareers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   
@@ -129,7 +132,7 @@ const CareersTab = () => {
           </tr>
         </thead>
         <tbody>
-          {careers.map(job => (
+          {careers.slice((currentPage - 1) * pageSize, (currentPage - 1) * pageSize + pageSize).map(job => (
             <tr key={job._id}>
               <td><span style={{fontWeight: 600, color: 'var(--accent-primary)'}}>{job.id || job._id.substring(0, 6)}</span></td>
               <td>{job.title}</td>
@@ -160,6 +163,14 @@ const CareersTab = () => {
           )}
         </tbody>
       </table>
+
+      {/* Pagination */}
+      <AdminPagination
+        currentPage={currentPage}
+        totalItems={careers.length}
+        pageSize={pageSize}
+        onPageChange={(page) => setCurrentPage(page)}
+      />
 
       {isModalOpen && (
         <div className="admin-modal-overlay">

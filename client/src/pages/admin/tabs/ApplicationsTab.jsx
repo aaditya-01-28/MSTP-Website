@@ -1,16 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { API_BASE_URL } from '../../../apiConfig';
 import { exportToExcel } from '../../../utils/exportToExcel';
+import AdminPagination from '../components/AdminPagination';
 
 const ApplicationsTab = () => {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
   const [selectedApp, setSelectedApp] = useState(null);
   const [replyApp, setReplyApp] = useState(null);
   const [replySubject, setReplySubject] = useState('');
   const [replyMessage, setReplyMessage] = useState('');
   const [sendingReply, setSendingReply] = useState(false);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search]);
 
   useEffect(() => {
     fetchApplications();
@@ -157,8 +164,8 @@ const ApplicationsTab = () => {
         <p style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-secondary)' }}>
           No job applications found.
         </p>
-      ) : (
-        <div className="data-table-wrapper" style={{ overflowX: 'auto' }}>
+      ) : (<>
+          <div className="data-table-wrapper" style={{ overflowX: 'auto' }}>
           <table className="data-table">
             <thead>
               <tr>
@@ -174,7 +181,7 @@ const ApplicationsTab = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredApps.map(app => (
+              {filteredApps.slice((currentPage - 1) * pageSize, (currentPage - 1) * pageSize + pageSize).map(app => (
                 <tr key={app._id}>
                   <td>
                     <strong>{app.firstName} {app.lastName}</strong>
@@ -242,7 +249,16 @@ const ApplicationsTab = () => {
             </tbody>
           </table>
         </div>
-      )}
+
+        {/* Pagination */}
+        <AdminPagination
+          currentPage={currentPage}
+          totalItems={filteredApps.length}
+          pageSize={pageSize}
+          onPageChange={(page) => setCurrentPage(page)}
+        />
+      </>
+    )}
 
       {/* Modal for Cover Letter details */}
       {selectedApp && (

@@ -35,28 +35,43 @@ const heroSlides = [
 const initialOverlayServices = [
   {
     title: 'AI SOLUTIONS',
-    icon: <Bot size={32} />,
+    icon: <Bot size={30} />,
     link: '/services/ai-services'
   },
   {
-    title: 'DEVOPS & CLOUD SERVICES',
-    icon: <Cloud size={32} />,
+    title: 'DEVOPS & CLOUD',
+    icon: <Cloud size={30} />,
     link: '/services/cloud-hosting'
   },
   {
-    title: 'APPLICATION DEVELOPMENT',
-    icon: <Code2 size={32} />,
+    title: 'APPLICATION DEV',
+    icon: <Code2 size={30} />,
     link: '/services/software-development'
   },
   {
-    title: 'PROJECT MANAGEMENT',
-    icon: <LayoutGrid size={32} />,
+    title: 'IT SERVICES',
+    icon: <LayoutGrid size={30} />,
     link: '/services/it-services'
   },
   {
-    title: 'UI/UX DESIGN',
-    icon: <MonitorCheck size={32} />,
+    title: 'WEB DEVELOPMENT',
+    icon: <MonitorCheck size={30} />,
     link: '/services/web-development'
+  },
+  {
+    title: 'WEB3 SOLUTIONS',
+    icon: <Code size={30} />,
+    link: '/services/web3'
+  },
+  {
+    title: 'STAFFING & PAYROLL',
+    icon: <Users size={30} />,
+    link: '/services/staffing'
+  },
+  {
+    title: 'DIGITAL MARKETING',
+    icon: <Mail size={30} />,
+    link: '/services/digital-marketing'
   }
 ];
 

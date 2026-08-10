@@ -8,6 +8,7 @@ const SiteSettings = require('./models/SiteSettings');
 const Admin = require('./models/Admin');
 const Contact = require('./models/Contact');
 const Application = require('./models/Application');
+const Consultation = require('./models/Consultation');
 const bcrypt = require('bcryptjs');
 
 const initialServices = [
@@ -673,6 +674,36 @@ const seedDatabase = async () => {
         }
       ]);
       console.log('✅ Initial Job Applications seeded into MongoDB');
+    }
+
+    // Seed Consultations
+    const consultationCount = await Consultation.countDocuments();
+    if (consultationCount === 0) {
+      await Consultation.insertMany([
+        {
+          name: 'Vikramaditya Roy',
+          email: 'vikram.roy@fintechinnovate.com',
+          phone: '+91 98112 34567',
+          company: 'Fintech Innovate Labs',
+          service: 'IT Consulting',
+          date: '2026-08-15',
+          requirements: 'Looking to audit and upgrade our cloud architecture and implement microservices.',
+          status: 'Pending',
+          submittedAt: new Date()
+        },
+        {
+          name: 'Ananya Deshmukh',
+          email: 'ananya.deshmukh@globalsolutions.io',
+          phone: '+91 99234 56789',
+          company: 'Global Solutions IO',
+          service: 'Web Development',
+          date: '2026-08-18',
+          requirements: 'Need full custom enterprise web portal redesign with React and high-availability Node.js backend.',
+          status: 'Contacted',
+          submittedAt: new Date()
+        }
+      ]);
+      console.log('✅ Initial Book Consultation bookings seeded into MongoDB');
     }
 
     // Seed PrivacyPolicy

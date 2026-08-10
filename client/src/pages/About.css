@@ -271,9 +271,57 @@
 @media (max-width: 992px) {
   .story-grid, .vm-grid {
     grid-template-columns: 1fr;
+    gap: 2.5rem;
   }
   
   .abstract-graphic {
     height: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .story-grid {
+    gap: 2rem;
+  }
+
+  .mission-graphic {
+    max-height: 280px;
+  }
+
+  .vm-card, .values-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .vm-title {
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .slider-btn {
+    width: 42px;
+    height: 42px;
+  }
+
+  .leader-img, .leader-image-placeholder {
+    width: 120px;
+    height: 120px;
+  }
+
+  .leader-name {
+    font-size: 1.15rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .vm-card, .values-card {
+    padding: 1.5rem 1.2rem;
+  }
+
+  .story-text {
+    font-size: 0.95rem;
+  }
+
+  .slider-dots {
+    margin-top: 1.2rem;
   }
 }

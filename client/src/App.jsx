@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, Navigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -60,22 +60,8 @@ function AppContent({ theme, toggleTheme }) {
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/testimonials" element={<div style={{paddingTop: '80px', minHeight: '80vh', backgroundColor: 'var(--bg-primary)'}}><Testimonials /></div>} />
             
-            {/* Index route for all services */}
-            <Route path="/services" element={
-              <div className="section container" style={{paddingTop: '100px', minHeight: '60vh'}}>
-                <h1 className="section-title">Our Services</h1>
-                <p style={{textAlign: 'center', marginBottom: '3rem', color: 'var(--text-secondary)'}}>
-                  Comprehensive digital solutions to drive your business forward.
-                </p>
-                <div style={{display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center'}}>
-                  {services.map((service) => (
-                    <Link key={service.id} to={`/services/${service.id}`} className="btn btn-outline" style={{margin: '0.5rem'}}>
-                      {service.title}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            } />
+            {/* Index route for services: redirects to it-services by default */}
+            <Route path="/services" element={<Navigate to="/services/it-services" replace />} />
             
             {/* Admin Routes */}
             <Route path="/admin/login" element={<AdminLogin />} />

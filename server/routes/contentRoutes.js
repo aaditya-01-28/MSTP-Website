@@ -10,6 +10,7 @@ const TeamMember = require('../models/TeamMember');
 const SiteSettings = require('../models/SiteSettings');
 const Contact = require('../models/Contact');
 const Application = require('../models/Application');
+const Consultation = require('../models/Consultation');
 const PrivacyPolicy = require('../models/PrivacyPolicy');
 
 // Helper to create PUBLIC CRUD routes (GETs are public, write operations are protected)
@@ -132,6 +133,7 @@ createPublicCrudRoutes(TeamMember, 'team');
 // Private/sensitive user data routes
 createPrivateCrudRoutes(Contact, 'contacts');
 createPrivateCrudRoutes(Application, 'applications');
+createPrivateCrudRoutes(Consultation, 'consultations');
 
 // Special route for SiteSettings (Singleton)
 router.get('/settings', async (req, res) => {

@@ -101,21 +101,42 @@ app.post('/api/contact', async (req, res) => {
   }
 });
 
+// Consultation Schema
+const Consultation = require('./models/Consultation');
+
 // 2. Book Consultation Endpoint
 app.post('/api/book', async (req, res) => {
-  const { name, email, phone, company, date, service, requirements } = req.body;
+  const { name, email, phone, company, date, service, subject, requirements } = req.body;
+  const selectedService = service || subject || 'General Consultation';
 
-  if (!name || !email || !service || !date) {
-    return res.status(400).json({ error: 'Name, email, service, and date are required.' });
+  if (!name || !email || !phone) {
+    return res.status(400).json({ error: 'Name, email, and phone number are required.' });
   }
 
-  const hrSubject = `New Consultation Booking: ${service} from ${name}`;
-  const hrBody = `New consultancy booking received.\n\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nCompany: ${company}\nService: ${service}\nPreferred Date: ${date}\nRequirements: ${requirements || 'None'}`;
-  
-  const userSubject = 'Consultation Booking Confirmation - WhiteCircle Group';
-  const userBody = `Hi ${name},\n\nYour consultation booking for "${service}" has been received. Our team will review your request and contact you to confirm the time.\n\nBest regards,\nWhiteCircle Group`;
+  try {
+    const newConsultation = new Consultation({
+      name,
+      email,
+      phone,
+      company: company || '',
+      service: selectedService,
+      date: date || new Date().toISOString().split('T')[0],
+      requirements: requirements || ''
+    });
+    await newConsultation.save();
+    console.log("Consultation saved to DB");
 
-  await sendEmails(res, email, name, hrSubject, hrBody, userSubject, userBody, 'Your consultation has been booked successfully! We will contact you soon.');
+    const hrSubject = `New Consultation Booking: ${selectedService} from ${name}`;
+    const hrBody = `New consultancy booking received.\n\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nCompany: ${company || 'N/A'}\nService: ${selectedService}\nPreferred Date: ${date || 'Flexible'}\nRequirements: ${requirements || 'None'}`;
+    
+    const userSubject = 'Consultation Booking Confirmation - WhiteCircle Group';
+    const userBody = `Hi ${name},\n\nYour consultation booking for "${selectedService}" has been received. Our team will review your request and contact you shortly to confirm the time.\n\nBest regards,\nWhiteCircle Group`;
+
+    await sendEmails(res, email, name, hrSubject, hrBody, userSubject, userBody, 'Your consultation has been booked successfully! We will contact you soon.');
+  } catch (error) {
+    console.error('Error saving consultation:', error);
+    res.status(500).json({ error: 'Database or Email error ❌' });
+  }
 });
 
 // Application Schema

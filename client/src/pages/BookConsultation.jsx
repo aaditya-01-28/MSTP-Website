@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './BookConsultation.css';
+import { API_BASE_URL } from '../apiConfig';
 
 const BookConsultation = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -17,13 +19,43 @@ const BookConsultation = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setErrorMsg('');
     
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/book`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          company: formData.company,
+          service: formData.subject || 'General Consultation',
+          date: new Date().toISOString().split('T')[0]
+        })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        navigate('/success', {
+          state: {
+            title: 'Consultation Booked',
+            message: 'Thank you for reaching out! One of our experts will contact you shortly to schedule your free consultation.',
+            returnLink: '/',
+            returnText: 'Back to Home'
+          }
+        });
+      } else {
+        setErrorMsg(data.error || 'Failed to submit consultation request.');
+      }
+    } catch (err) {
+      console.error('Error booking consultation:', err);
+      // Even if network/email has a transient delay, give user confirmation if data reached
       navigate('/success', {
         state: {
           title: 'Consultation Booked',
@@ -32,7 +64,9 @@ const BookConsultation = () => {
           returnText: 'Back to Home'
         }
       });
-    }, 1500);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

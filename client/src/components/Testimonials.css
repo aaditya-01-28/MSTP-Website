@@ -278,3 +278,40 @@
     text-align: left;
   }
 }
+
+@media (max-width: 768px) {
+  .testimonial-slider-card {
+    padding: 2rem 1.4rem;
+  }
+
+  .testimonials-title {
+    font-size: 2rem;
+  }
+
+  .testimonial-text {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    min-height: auto;
+  }
+
+  .slider-next-btn {
+    right: -10px;
+    width: 36px;
+    height: 36px;
+  }
+}
+
+@media (max-width: 480px) {
+  .testimonial-slider-card {
+    padding: 1.6rem 1.1rem;
+    border-radius: 12px;
+  }
+
+  .slider-next-btn {
+    right: -8px;
+  }
+
+  .right-heading {
+    font-size: 1.25rem;
+  }
+}

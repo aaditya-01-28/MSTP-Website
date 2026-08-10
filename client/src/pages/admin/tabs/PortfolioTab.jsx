@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { API_BASE_URL } from '../../../apiConfig';
 import { exportToExcel } from '../../../utils/exportToExcel';
+import AdminPagination from '../components/AdminPagination';
 
 const PortfolioTab = () => {
   const [portfolios, setPortfolios] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   
@@ -113,7 +116,7 @@ const PortfolioTab = () => {
           </tr>
         </thead>
         <tbody>
-          {portfolios.map(item => (
+          {portfolios.slice((currentPage - 1) * pageSize, (currentPage - 1) * pageSize + pageSize).map(item => (
             <tr key={item._id}>
               <td>{item.id}</td>
               <td>{item.title}</td>
@@ -128,6 +131,14 @@ const PortfolioTab = () => {
           )}
         </tbody>
       </table>
+
+      {/* Pagination */}
+      <AdminPagination
+        currentPage={currentPage}
+        totalItems={portfolios.length}
+        pageSize={pageSize}
+        onPageChange={(page) => setCurrentPage(page)}
+      />
 
       {isModalOpen && (
         <div className="admin-modal-overlay">

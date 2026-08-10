@@ -38,7 +38,9 @@ const Navbar = ({ theme, toggleTheme }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [forceCloseMegaMenu, setForceCloseMegaMenu] = useState(false);
 
-  const closeMobileMenu = () => setIsMobileMenuOpen(false);
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
 
   const handleServiceClick = () => {
     closeMobileMenu();
@@ -66,7 +68,7 @@ const Navbar = ({ theme, toggleTheme }) => {
             className="nav-item-dropdown"
             onMouseLeave={() => setForceCloseMegaMenu(false)}
           >
-            <Link to="/services" className={location.pathname === '/services' ? 'active' : ''} onClick={closeMobileMenu}>Services</Link>
+            <Link to="/services/it-services" className={location.pathname.startsWith('/services') ? 'active' : ''} onClick={closeMobileMenu}>Services</Link>
             <div className={`mega-menu ${forceCloseMegaMenu ? 'force-close' : ''}`}>
               <div className="mega-menu-grid" onClick={handleServiceClick}>
                 
@@ -123,10 +125,13 @@ const Navbar = ({ theme, toggleTheme }) => {
             </div>
           </li>
           <li>
-            <Link to="/portfolio" className={location.pathname === '/portfolio' ? 'active' : ''} onClick={closeMobileMenu}>Portfolio</Link>
+            <Link to="/portfolio" className={location.pathname.startsWith('/portfolio') ? 'active' : ''} onClick={closeMobileMenu}>Portfolio</Link>
           </li>
           <li>
             <Link to="/careers" className={location.pathname === '/careers' ? 'active' : ''} onClick={closeMobileMenu}>Careers</Link>
+          </li>
+          <li className="mobile-only-action">
+            <Link to="/contact" className="btn btn-primary mobile-drawer-btn" onClick={closeMobileMenu}>Contact us</Link>
           </li>
         </ul>
 

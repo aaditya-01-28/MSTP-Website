@@ -82,11 +82,29 @@
 }
 
 @media (max-width: 768px) {
+  .book-page {
+    padding-top: calc(var(--header-height) + 1rem);
+    padding-bottom: 3rem;
+  }
+
   .book-form .form-row {
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1.2rem;
   }
+
   .book-form-container {
-    padding: 1.5rem;
+    padding: 2rem 1.4rem;
+  }
+
+  .book-form .submit-btn {
+    width: 100%;
+    min-width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .book-form-container {
+    padding: 1.6rem 1rem;
+    border-radius: 12px;
   }
 }

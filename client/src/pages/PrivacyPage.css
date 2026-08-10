@@ -181,6 +181,7 @@
   .privacy-section-row {
     flex-direction: column;
     gap: 1rem;
+    padding: 2rem 0;
   }
 
   .privacy-icon-box {
@@ -190,5 +191,24 @@
   .privacy-section-cols {
     grid-template-columns: 1fr;
     gap: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .privacy-page-title {
+    font-size: 1.85rem;
+  }
+
+  .privacy-page-subtitle {
+    font-size: 1rem;
+  }
+
+  .privacy-intro-block {
+    font-size: 0.98rem;
+    margin-bottom: 2rem;
+  }
+
+  .privacy-section-row {
+    padding: 1.5rem 0;
   }
 }

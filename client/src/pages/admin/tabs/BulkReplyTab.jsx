@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { API_BASE_URL } from '../../../apiConfig';
+import AdminPagination from '../components/AdminPagination';
 
 const BulkReplyTab = () => {
-  const [targetGroup, setTargetGroup] = useState('applications'); // 'applications' | 'contacts' | 'both'
+  const [targetGroup, setTargetGroup] = useState('applications'); // 'applications' | 'contacts' | 'consultations' | 'all'
   const [applications, setApplications] = useState([]);
   const [contacts, setContacts] = useState([]);
+  const [consultations, setConsultations] = useState([]);
   const [loading, setLoading] = useState(true);
   
   const [statusFilter, setStatusFilter] = useState('All');
   const [search, setSearch] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 6;
   
   // Track selected items by unique record ID instead of raw email string
   const [selectedIds, setSelectedIds] = useState(new Set());
@@ -23,6 +27,10 @@ const BulkReplyTab = () => {
   const [alertInfo, setAlertInfo] = useState(null); // { type: 'success' | 'error', text: '' }
 
   useEffect(() => {
+    setCurrentPage(1);
+  }, [targetGroup, statusFilter, search]);
+
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -30,16 +38,19 @@ const BulkReplyTab = () => {
     setLoading(true);
     const token = localStorage.getItem('adminToken');
     try {
-      const [appRes, contactRes] = await Promise.all([
+      const [appRes, contactRes, consultRes] = await Promise.all([
         fetch(`${API_BASE_URL}/api/applications`, { headers: { 'Authorization': `Bearer ${token}` } }),
-        fetch(`${API_BASE_URL}/api/contacts`, { headers: { 'Authorization': `Bearer ${token}` } })
+        fetch(`${API_BASE_URL}/api/contacts`, { headers: { 'Authorization': `Bearer ${token}` } }),
+        fetch(`${API_BASE_URL}/api/consultations`, { headers: { 'Authorization': `Bearer ${token}` } })
       ]);
 
       const appData = await appRes.json();
       const contactData = await contactRes.json();
+      const consultData = await consultRes.json();
 
       if (Array.isArray(appData)) setApplications(appData);
       if (Array.isArray(contactData)) setContacts(contactData);
+      if (Array.isArray(consultData)) setConsultations(consultData);
     } catch (err) {
       console.error('Error fetching data for bulk reply:', err);
     } finally {
@@ -50,7 +61,7 @@ const BulkReplyTab = () => {
   // Consolidate list based on targetGroup selection
   const getCombinedList = () => {
     let list = [];
-    if (targetGroup === 'applications' || targetGroup === 'both') {
+    if (targetGroup === 'applications' || targetGroup === 'all') {
       const appItems = applications.map(app => ({
         id: `app_${app._id}`,
         type: 'Applicant',
@@ -65,7 +76,7 @@ const BulkReplyTab = () => {
       list = [...list, ...appItems];
     }
 
-    if (targetGroup === 'contacts' || targetGroup === 'both') {
+    if (targetGroup === 'contacts' || targetGroup === 'all') {
       const contactItems = contacts.map(c => ({
         id: `contact_${c._id}`,
         type: 'Contact Inquiry',
@@ -78,6 +89,21 @@ const BulkReplyTab = () => {
         raw: c
       }));
       list = [...list, ...contactItems];
+    }
+
+    if (targetGroup === 'consultations' || targetGroup === 'all') {
+      const consultItems = consultations.map(c => ({
+        id: `consult_${c._id}`,
+        type: 'Consultation',
+        name: c.name || 'Client',
+        firstName: (c.name || 'Client').split(' ')[0],
+        email: c.email,
+        detail: c.service || 'Consultation',
+        date: c.submittedAt || c.createdAt,
+        status: c.status || 'Pending',
+        raw: c
+      }));
+      list = [...list, ...consultItems];
     }
     return list;
   };
@@ -266,7 +292,7 @@ const BulkReplyTab = () => {
         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
           
           {/* Target Group Selector Buttons */}
-          <div style={{ display: 'flex', gap: '8px' }}>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
             <button
               type="button"
               className={`btn-sm ${targetGroup === 'applications' ? 'btn-primary' : 'btn-outline'}`}
@@ -283,10 +309,17 @@ const BulkReplyTab = () => {
             </button>
             <button
               type="button"
-              className={`btn-sm ${targetGroup === 'both' ? 'btn-primary' : 'btn-outline'}`}
-              onClick={() => { setTargetGroup('both'); setSelectedIds(new Set()); setPreviewId(''); }}
+              className={`btn-sm ${targetGroup === 'consultations' ? 'btn-primary' : 'btn-outline'}`}
+              onClick={() => { setTargetGroup('consultations'); setSelectedIds(new Set()); setPreviewId(''); }}
             >
-              Both ({applications.length + contacts.length})
+              Consultations ({consultations.length})
+            </button>
+            <button
+              type="button"
+              className={`btn-sm ${targetGroup === 'all' ? 'btn-primary' : 'btn-outline'}`}
+              onClick={() => { setTargetGroup('all'); setSelectedIds(new Set()); setPreviewId(''); }}
+            >
+              All ({applications.length + contacts.length + consultations.length})
             </button>
           </div>
 
@@ -334,29 +367,29 @@ const BulkReplyTab = () => {
       </div>
 
       {/* Main Grid: Recipient Table & Email Composer */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '1.5rem', marginTop: '1.5rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.25fr) minmax(0, 1fr)', gap: '1.2rem', marginTop: '1.2rem' }}>
         
         {/* Recipient Selection Table */}
-        <div className="admin-card" style={{ padding: '0', overflow: 'hidden' }}>
-          <div style={{ padding: '1.2rem 1.5rem', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h3 style={{ margin: 0, fontSize: '1.1rem' }}>
+        <div className="admin-card" style={{ padding: '0', overflow: 'hidden', display: 'flex', flexDirection: 'column', height: 'fit-content' }}>
+          <div style={{ padding: '0.9rem 1.2rem', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 600 }}>
               Select Recipients ({filteredList.length})
             </h3>
-            <span style={{ fontSize: '0.85rem', color: 'var(--accent-primary)', fontWeight: 600 }}>
+            <span style={{ fontSize: '0.82rem', color: 'var(--accent-primary)', fontWeight: 600 }}>
               {selectedIds.size} Selected
             </span>
           </div>
 
-          <div style={{ maxHeight: '520px', overflowY: 'auto' }}>
+          <div style={{ overflowX: 'auto' }}>
             {loading ? (
-              <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-secondary)' }}>Loading recipients...</div>
+              <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-secondary)' }}>Loading recipients...</div>
             ) : filteredList.length === 0 ? (
-              <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-secondary)' }}>No matching recipients found.</div>
+              <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-secondary)' }}>No matching recipients found.</div>
             ) : (
-              <table className="data-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <table className="data-table" style={{ width: '100%', borderCollapse: 'collapse', tableLayout: 'auto' }}>
                 <thead>
                   <tr style={{ background: 'var(--bg-tertiary)' }}>
-                    <th style={{ width: '40px', textAlign: 'center' }}>
+                    <th style={{ width: '36px', textAlign: 'center', padding: '8px 6px' }}>
                       <input
                         type="checkbox"
                         checked={isAllSelected}
@@ -364,13 +397,13 @@ const BulkReplyTab = () => {
                         style={{ cursor: 'pointer' }}
                       />
                     </th>
-                    <th>Name & Email</th>
-                    <th>Type / Role</th>
-                    <th>Status</th>
+                    <th style={{ padding: '8px 10px' }}>Name & Email</th>
+                    <th style={{ padding: '8px 10px' }}>Type / Role</th>
+                    <th style={{ padding: '8px 10px', textAlign: 'center' }}>Status</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredList.map((item) => {
+                  {filteredList.slice((currentPage - 1) * pageSize, (currentPage - 1) * pageSize + pageSize).map((item) => {
                     const isChecked = selectedIds.has(item.id);
                     return (
                       <tr 
@@ -381,7 +414,7 @@ const BulkReplyTab = () => {
                         }}
                         onClick={() => handleToggleSelect(item.id)}
                       >
-                        <td style={{ textAlign: 'center' }} onClick={(e) => e.stopPropagation()}>
+                        <td style={{ textAlign: 'center', padding: '8px 6px' }} onClick={(e) => e.stopPropagation()}>
                           <input
                             type="checkbox"
                             checked={isChecked}
@@ -389,16 +422,25 @@ const BulkReplyTab = () => {
                             style={{ cursor: 'pointer' }}
                           />
                         </td>
-                        <td>
-                          <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{item.name}</div>
-                          <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>{item.email}</div>
+                        <td style={{ padding: '8px 10px' }}>
+                          <div style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: '0.86rem' }}>{item.name}</div>
+                          <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>{item.email}</div>
                         </td>
-                        <td>
-                          <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', display: 'block' }}>{item.type}</span>
-                          <span style={{ fontSize: '0.85rem', color: 'var(--text-primary)', fontWeight: 500 }}>{item.detail}</span>
+                        <td style={{ padding: '8px 10px' }}>
+                          <span style={{ fontSize: '0.76rem', color: 'var(--text-secondary)', display: 'block' }}>{item.type}</span>
+                          <span style={{ fontSize: '0.82rem', color: 'var(--text-primary)', fontWeight: 500 }}>{item.detail}</span>
                         </td>
-                        <td>
-                          <span className={`status-select status-${(item.status || 'Pending').toLowerCase()}`} style={{ display: 'inline-block', padding: '2px 8px' }}>
+                        <td style={{ padding: '8px 10px', textAlign: 'center' }}>
+                          <span 
+                            className={`status-select status-${(item.status || 'Pending').toLowerCase()}`} 
+                            style={{ 
+                              display: 'inline-block', 
+                              padding: '2px 8px', 
+                              fontSize: '0.75rem',
+                              minWidth: 'auto',
+                              width: 'auto'
+                            }}
+                          >
                             {item.status}
                           </span>
                         </td>
@@ -408,6 +450,16 @@ const BulkReplyTab = () => {
                 </tbody>
               </table>
             )}
+          </div>
+
+          {/* Pagination inside Bulk Reply Table Card */}
+          <div style={{ padding: '0 0.8rem 0.6rem' }}>
+            <AdminPagination
+              currentPage={currentPage}
+              totalItems={filteredList.length}
+              pageSize={pageSize}
+              onPageChange={(page) => setCurrentPage(page)}
+            />
           </div>
         </div>
 

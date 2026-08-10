@@ -224,6 +224,7 @@
 @media (max-width: 900px) {
   .cs-header-grid, .cs-challenge-grid {
     grid-template-columns: 1fr;
+    gap: 2.5rem;
   }
   
   .process-arrow {
@@ -232,11 +233,54 @@
   
   .cs-process-flow {
     border-radius: 20px;
-    padding: 2rem;
+    padding: 1.5rem;
   }
   
   .process-step {
-    flex: 1 1 30%;
+    flex: 1 1 45%;
     margin-bottom: 1rem;
+  }
+
+  .cs-tools-grid {
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .cs-title {
+    font-size: 1.8rem;
+  }
+
+  .cs-section {
+    margin-bottom: 3.5rem;
+  }
+
+  .cs-section-title {
+    font-size: 1.4rem;
+    margin-bottom: 2rem;
+  }
+
+  .cs-testimonial-box {
+    padding: 2rem 1.4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cs-title {
+    font-size: 1.5rem;
+  }
+
+  .cs-challenge-icons {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+
+  .process-step {
+    flex: 1 1 100%;
+  }
+
+  .cs-testimonial-box {
+    padding: 1.6rem 1.1rem;
+    border-radius: 14px;
   }
 }
