@@ -460,33 +460,51 @@
 
 @media (max-width: 992px) {
   .hero-slider-wrapper {
-    height: 75vh;
-    min-height: 520px;
-    max-height: 650px;
+    height: auto;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    min-height: 340px;
+    max-height: 520px;
+  }
+
+  .hero-media-item {
+    object-fit: contain;
+    object-position: center center;
+    background-color: #050b14;
   }
 
   .hero-text-overlay {
-    top: 28%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     padding: 0 3.5rem;
   }
 
   .hero-title {
-    font-size: 2.2rem;
+    font-size: 2rem;
   }
 
   .slider-arrow {
-    top: 28%;
+    top: 50%;
+    transform: translateY(-50%);
     width: 38px;
     height: 38px;
   }
 
   .slider-dots {
-    bottom: 115px;
+    bottom: 12px;
   }
 
   .hero-overlay-container {
-    bottom: 16px;
+    position: relative;
+    left: auto;
+    bottom: auto;
+    transform: none;
+    width: 100%;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem 1.5rem 0.75rem;
     gap: 0.75rem;
+    z-index: 10;
   }
 
   .hero-overlay-card {
@@ -505,23 +523,33 @@
 
 @media (max-width: 768px) {
   .hero-slider-wrapper {
-    height: 76vh;
-    min-height: 500px;
-    max-height: 600px;
+    height: auto;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    min-height: 220px;
+    max-height: 420px;
+  }
+
+  .hero-media-item {
+    object-fit: contain;
+    object-position: center center;
+    background-color: #050b14;
   }
 
   .hero-text-overlay {
-    top: 24%;
-    padding: 0 3.2rem;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding: 0 2.8rem;
   }
 
   .hero-title {
-    font-size: 1.65rem;
+    font-size: 1.35rem;
     line-height: 1.25;
   }
 
   .slider-arrow {
-    top: 24%;
+    top: 50%;
+    transform: translateY(-50%);
     width: 32px;
     height: 32px;
   }
@@ -535,7 +563,7 @@
   }
 
   .slider-dots {
-    bottom: 105px;
+    bottom: 10px;
     padding: 4px 10px;
   }
 
@@ -549,14 +577,21 @@
   }
 
   .hero-overlay-container {
-    bottom: 14px;
-    width: 96%;
+    position: relative;
+    left: auto;
+    bottom: auto;
+    transform: none;
+    width: 100%;
+    margin-top: 0.85rem;
+    margin-bottom: 0.5rem;
+    padding: 0.4rem 1rem 0.6rem;
     gap: 0.65rem;
+    z-index: 10;
   }
 
   .hero-overlay-card {
-    flex: 0 0 135px;
-    min-width: 125px;
+    flex: 0 0 130px;
+    min-width: 120px;
     padding: 0.75rem 0.5rem;
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.28);
@@ -569,67 +604,86 @@
 
 @media (max-width: 480px) {
   .hero-slider-wrapper {
-    height: 78vh;
-    min-height: 480px;
-    max-height: 560px;
+    height: auto;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    min-height: 190px;
+    max-height: 300px;
+  }
+
+  .hero-media-item {
+    object-fit: contain;
+    object-position: center center;
+    background-color: #050b14;
   }
 
   .hero-text-overlay {
-    top: 22%;
-    padding: 0 2.8rem;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding: 0 2.2rem;
   }
 
   .hero-title {
-    font-size: 1.4rem;
+    font-size: 1.15rem;
     line-height: 1.25;
   }
 
   .slider-arrow {
-    top: 22%;
-    width: 28px;
-    height: 28px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 26px;
+    height: 26px;
   }
 
   .arrow-left {
-    left: 6px;
+    left: 5px;
   }
 
   .arrow-right {
-    right: 6px;
+    right: 5px;
   }
 
   .slider-dots {
-    bottom: 95px;
+    bottom: 8px;
     padding: 3px 8px;
   }
 
   .slider-dot {
-    width: 7px;
-    height: 7px;
+    width: 6px;
+    height: 6px;
   }
 
   .slider-dot.active {
-    width: 18px;
+    width: 16px;
   }
 
   .hero-overlay-container {
-    bottom: 10px;
+    position: relative;
+    left: auto;
+    bottom: auto;
+    transform: none;
+    width: 100%;
+    margin-top: 0.75rem;
+    margin-bottom: 0.5rem;
+    padding: 0.3rem 0.75rem 0.5rem;
+    gap: 0.55rem;
+    z-index: 10;
   }
 
   .hero-overlay-card {
-    flex: 0 0 120px;
-    min-width: 115px;
-    padding: 0.7rem 0.45rem;
+    flex: 0 0 115px;
+    min-width: 110px;
+    padding: 0.65rem 0.4rem;
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.28);
   }
 
   .overlay-icon-box {
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
   }
 
   .overlay-title {
-    font-size: 0.68rem;
+    font-size: 0.66rem;
   }
 }

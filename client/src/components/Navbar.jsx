@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Sun, Moon, Menu, X } from 'lucide-react';
+import { Sun, Moon, Menu, X, ChevronDown } from 'lucide-react';
 import './Navbar.css';
 
 // Import 25 icons mapped to Services
@@ -33,13 +33,63 @@ import iconExchange from '../assets/services/exchange.png';
 import iconMLM from '../assets/services/mlm.png';
 import iconDex from '../assets/services/dex 2.png';
 
+const serviceCategories = [
+  {
+    title: 'FOUNDATION',
+    items: [
+      { path: '/services/it-services', name: 'IT Services', icon: iconIT },
+      { path: '/services/salesforce-services', name: 'Salesforce Services', icon: iconSalesforce },
+      { path: '/services/web-development', name: 'Web Development', icon: iconWebDev },
+      { path: '/services/mobile-app', name: 'Mobile App Development', icon: iconMobile },
+      { path: '/services/digital-marketing', name: 'Digital Marketing Services', icon: iconDigital },
+      { path: '/services/software-development', name: 'Software Development', icon: iconSoftware }
+    ]
+  },
+  {
+    title: 'INNOVATION',
+    items: [
+      { path: '/services/ai-services', name: 'Artificial Intelligence', icon: iconAI },
+      { path: '/services/iot', name: 'Internet Of Things', icon: iconIoT },
+      { path: '/services/database-design', name: 'Database Design', icon: iconDatabase },
+      { path: '/services/data-analytics', name: 'Data Analytics', icon: iconDataAnalytics },
+      { path: '/services/industrial-automation', name: 'Industrial Automation', icon: iconIndustrial },
+      { path: '/services/software-testing', name: 'Software Testing', icon: iconTesting }
+    ]
+  },
+  {
+    title: 'ENTERPRISE',
+    items: [
+      { path: '/services/staffing', name: 'Staffing & Payroll', icon: iconStaffing },
+      { path: '/services/payment-gateway', name: 'Payment Gateway Service', icon: iconPayment },
+      { path: '/services/cloud-hosting', name: 'Cloud & Hosting Service', icon: iconCloud },
+      { path: '/services/shopify-wordpress', name: 'Shopify & Wordpress Development', icon: iconShopify },
+      { path: '/services/oracle', name: 'Oracle Development & Consulting', icon: iconOracle }
+    ]
+  },
+  {
+    title: 'WEB3 SERVICES',
+    items: [
+      { path: '/services/ico', name: 'ICO Development', icon: iconICO },
+      { path: '/services/token', name: 'Token Development', icon: iconToken },
+      { path: '/services/web3', name: 'Web3 Development', icon: iconWeb3 },
+      { path: '/services/dapp', name: 'DApp Development', icon: iconDApp },
+      { path: '/services/wallet', name: 'Wallet Development', icon: iconWallet },
+      { path: '/services/exchange', name: 'Exchange Development', icon: iconExchange },
+      { path: '/services/mlm', name: 'MLM Software Development', icon: iconMLM },
+      { path: '/services/dex', name: 'Dex Platform', icon: iconDex }
+    ]
+  }
+];
+
 const Navbar = ({ theme, toggleTheme }) => {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false);
   const [forceCloseMegaMenu, setForceCloseMegaMenu] = useState(false);
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
+    setIsMobileServicesOpen(false);
   };
 
   const handleServiceClick = () => {
@@ -64,66 +114,72 @@ const Navbar = ({ theme, toggleTheme }) => {
           <li>
             <Link to="/about" className={location.pathname === '/about' ? 'active' : ''} onClick={closeMobileMenu}>About Us</Link>
           </li>
+          
+          {/* Desktop Services Dropdown */}
           <li 
-            className="nav-item-dropdown"
+            className="nav-item-dropdown desktop-services-item"
             onMouseLeave={() => setForceCloseMegaMenu(false)}
           >
             <Link to="/services/it-services" className={location.pathname.startsWith('/services') ? 'active' : ''} onClick={closeMobileMenu}>Services</Link>
             <div className={`mega-menu ${forceCloseMegaMenu ? 'force-close' : ''}`}>
               <div className="mega-menu-grid" onClick={handleServiceClick}>
-                
-                <div className="mega-menu-col">
-                  <h4>FOUNDATION</h4>
-                  <ul>
-                    <li><Link to="/services/it-services"><img src={iconIT} className="mega-icon" alt=""/> IT Services</Link></li>
-                    <li><Link to="/services/salesforce-services"><img src={iconSalesforce} className="mega-icon" alt=""/> Salesforce Services</Link></li>
-                    <li><Link to="/services/web-development"><img src={iconWebDev} className="mega-icon" alt=""/> Web Development</Link></li>
-                    <li><Link to="/services/mobile-app"><img src={iconMobile} className="mega-icon" alt=""/> Mobile App Development</Link></li>
-                    <li><Link to="/services/digital-marketing"><img src={iconDigital} className="mega-icon" alt=""/> Digital Marketing Services</Link></li>
-                    <li><Link to="/services/software-development"><img src={iconSoftware} className="mega-icon" alt=""/> Software Development</Link></li>
-                  </ul>
-                </div>
-
-                <div className="mega-menu-col">
-                  <h4>INNOVATION</h4>
-                  <ul>
-                    <li><Link to="/services/ai-services"><img src={iconAI} className="mega-icon" alt=""/> Artificial Intelligence</Link></li>
-                    <li><Link to="/services/iot"><img src={iconIoT} className="mega-icon" alt=""/> Internet Of Things</Link></li>
-                    <li><Link to="/services/database-design"><img src={iconDatabase} className="mega-icon" alt=""/> Database Design</Link></li>
-                    <li><Link to="/services/data-analytics"><img src={iconDataAnalytics} className="mega-icon" alt=""/> Data Analytics</Link></li>
-                    <li><Link to="/services/industrial-automation"><img src={iconIndustrial} className="mega-icon" alt=""/> Industrial Automation</Link></li>
-                    <li><Link to="/services/software-testing"><img src={iconTesting} className="mega-icon" alt=""/> Software Testing</Link></li>
-                  </ul>
-                </div>
-
-                <div className="mega-menu-col">
-                  <h4>ENTERPRISE</h4>
-                  <ul>
-                    <li><Link to="/services/staffing"><img src={iconStaffing} className="mega-icon" alt=""/> Staffing & Payroll</Link></li>
-                    <li><Link to="/services/payment-gateway"><img src={iconPayment} className="mega-icon" alt=""/> Payment Gateway Service</Link></li>
-                    <li><Link to="/services/cloud-hosting"><img src={iconCloud} className="mega-icon" alt=""/> Cloud & Hosting Service</Link></li>
-                    <li><Link to="/services/shopify-wordpress"><img src={iconShopify} className="mega-icon" alt=""/> Shopify & Wordpress Development</Link></li>
-                    <li><Link to="/services/oracle"><img src={iconOracle} className="mega-icon" alt=""/> Oracle Development & Consulting</Link></li>
-                  </ul>
-                </div>
-
-                <div className="mega-menu-col">
-                  <h4>WEB3 SERVICES</h4>
-                  <ul>
-                    <li><Link to="/services/ico"><img src={iconICO} className="mega-icon" alt=""/> ICO Development</Link></li>
-                    <li><Link to="/services/token"><img src={iconToken} className="mega-icon" alt=""/> Token Development</Link></li>
-                    <li><Link to="/services/web3"><img src={iconWeb3} className="mega-icon" alt=""/> Web3 Development</Link></li>
-                    <li><Link to="/services/dapp"><img src={iconDApp} className="mega-icon" alt=""/> DApp Development</Link></li>
-                    <li><Link to="/services/wallet"><img src={iconWallet} className="mega-icon" alt=""/> Wallet Development</Link></li>
-                    <li><Link to="/services/exchange"><img src={iconExchange} className="mega-icon" alt=""/> Exchange Development</Link></li>
-                    <li><Link to="/services/mlm"><img src={iconMLM} className="mega-icon" alt=""/> MLM Software Development</Link></li>
-                    <li><Link to="/services/dex"><img src={iconDex} className="mega-icon" alt=""/> Dex Platform</Link></li>
-                  </ul>
-                </div>
-
+                {serviceCategories.map((category, idx) => (
+                  <div className="mega-menu-col" key={idx}>
+                    <h4>{category.title}</h4>
+                    <ul>
+                      {category.items.map((item, itemIdx) => (
+                        <li key={itemIdx}>
+                          <Link to={item.path}>
+                            <img src={item.icon} className="mega-icon" alt=""/> {item.name}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
               </div>
             </div>
           </li>
+
+          {/* Mobile Services Accordion */}
+          <li className="mobile-services-item">
+            <button 
+              type="button" 
+              className={`mobile-services-toggle ${location.pathname.startsWith('/services') ? 'active' : ''}`}
+              onClick={() => setIsMobileServicesOpen(prev => !prev)}
+              aria-expanded={isMobileServicesOpen}
+            >
+              <span>Services</span>
+              <ChevronDown 
+                size={20} 
+                className={`mobile-services-chevron ${isMobileServicesOpen ? 'rotated' : ''}`} 
+              />
+            </button>
+
+            {isMobileServicesOpen && (
+              <div className="mobile-services-accordion">
+                {serviceCategories.map((category, catIdx) => (
+                  <div className="mobile-category-group" key={catIdx}>
+                    <div className="mobile-category-title">{category.title}</div>
+                    <div className="mobile-category-list">
+                      {category.items.map((item, itemIdx) => (
+                        <Link 
+                          key={itemIdx}
+                          to={item.path}
+                          className={`mobile-service-link ${location.pathname === item.path ? 'active' : ''}`}
+                          onClick={closeMobileMenu}
+                        >
+                          <img src={item.icon} className="mega-icon" alt="" />
+                          <span>{item.name}</span>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </li>
+
           <li>
             <Link to="/portfolio" className={location.pathname.startsWith('/portfolio') ? 'active' : ''} onClick={closeMobileMenu}>Portfolio</Link>
           </li>
