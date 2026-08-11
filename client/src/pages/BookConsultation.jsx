@@ -21,8 +21,28 @@ const BookConsultation = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
     setErrorMsg('');
+
+    const nameRegex = /^[a-zA-Z\s.'-]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const cleanPhone = (formData.phone || '').toString().replace(/[\s-]/g, '');
+
+    if (!formData.name.trim() || !nameRegex.test(formData.name.trim())) {
+      setErrorMsg('Please enter a valid Full Name without numbers or special characters.');
+      return;
+    }
+
+    if (!formData.email.trim() || !emailRegex.test(formData.email.trim())) {
+      setErrorMsg('Please enter a valid Email address.');
+      return;
+    }
+
+    if (!cleanPhone || !/^[0-9]{7,15}$/.test(cleanPhone)) {
+      setErrorMsg('Please enter a valid Phone Number containing only 7 to 15 digits.');
+      return;
+    }
+
+    setIsSubmitting(true);
     
     try {
       const res = await fetch(`${API_BASE_URL}/api/book`, {
@@ -31,10 +51,10 @@ const BookConsultation = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          company: formData.company,
+          name: formData.name.trim(),
+          email: formData.email.toLowerCase().trim(),
+          phone: cleanPhone,
+          company: formData.company ? formData.company.trim() : '',
           service: formData.subject || 'General Consultation',
           date: new Date().toISOString().split('T')[0]
         })
@@ -55,15 +75,7 @@ const BookConsultation = () => {
       }
     } catch (err) {
       console.error('Error booking consultation:', err);
-      // Even if network/email has a transient delay, give user confirmation if data reached
-      navigate('/success', {
-        state: {
-          title: 'Consultation Booked',
-          message: 'Thank you for reaching out! One of our experts will contact you shortly to schedule your free consultation.',
-          returnLink: '/',
-          returnText: 'Back to Home'
-        }
-      });
+      setErrorMsg('Failed to connect to the server. Please check your connection.');
     } finally {
       setIsSubmitting(false);
     }
@@ -77,6 +89,20 @@ const BookConsultation = () => {
             <h1 className="section-title">Book a <span>Free Consultation</span></h1>
             <p>Ready to transform your business? Let's discuss your project.</p>
           </div>
+
+          {errorMsg && (
+            <div style={{
+              backgroundColor: 'rgba(239, 68, 68, 0.15)',
+              border: '1px solid rgba(239, 68, 68, 0.4)',
+              color: '#ef4444',
+              padding: '0.85rem 1.2rem',
+              borderRadius: '8px',
+              marginBottom: '1.5rem',
+              fontSize: '0.95rem'
+            }}>
+              {errorMsg}
+            </div>
+          )}
 
           <form className="book-form" onSubmit={handleSubmit}>
             <div className="form-row">

@@ -33,7 +33,7 @@ const Portfolio = () => {
   return (
     <div className="portfolio-page">
       <div className="container" style={{paddingTop: '4rem', paddingBottom: '4rem'}}>
-        <h2 className="portfolio-main-title">Delivered by WhiteCircle Group</h2>
+        <h2 className="portfolio-main-title">Delivered by MAATRSHRI Group</h2>
         
         <div className="portfolio-grid">
           {portfolios.map((project) => {

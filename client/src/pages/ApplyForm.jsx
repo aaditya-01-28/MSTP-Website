@@ -6,6 +6,7 @@ import {
   FileText, ArrowLeft 
 } from 'lucide-react';
 import './ApplyForm.css';
+import { API_BASE_URL } from '../apiConfig';
 
 const GithubIcon = ({ size = 18, className = "" }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -111,33 +112,69 @@ const ApplyForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMsg('');
     
+    // Validations
+    const nameRegex = /^[a-zA-Z\s.'-]+$/;
+    const cityRegex = /^[a-zA-Z\s.'-]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const cleanPhone = (formData.phone || '').toString().replace(/[\s-]/g, '');
+
+    if (!formData.firstName.trim() || !nameRegex.test(formData.firstName.trim())) {
+      setErrorMsg('Please enter a valid First Name without numbers or special characters.');
+      return;
+    }
+
+    if (!formData.lastName.trim() || !nameRegex.test(formData.lastName.trim())) {
+      setErrorMsg('Please enter a valid Last Name without numbers or special characters.');
+      return;
+    }
+
+    if (!formData.email.trim() || !emailRegex.test(formData.email.trim())) {
+      setErrorMsg('Please enter a valid Email address.');
+      return;
+    }
+
+    if (!cleanPhone || !/^[0-9]{7,15}$/.test(cleanPhone)) {
+      setErrorMsg('Please enter a valid Phone Number containing only 7 to 15 digits.');
+      return;
+    }
+
+    if (!formData.country.trim() || !nameRegex.test(formData.country.trim())) {
+      setErrorMsg('Please enter a valid Country name without numbers or special characters.');
+      return;
+    }
+
+    if (!formData.city.trim() || !cityRegex.test(formData.city.trim())) {
+      setErrorMsg('Please enter a valid City name without numbers or special characters.');
+      return;
+    }
+
     if (!file) {
       setErrorMsg('Please upload your CV/Resume to proceed.');
       return;
     }
 
     setIsSubmitting(true);
-    setErrorMsg('');
 
     try {
       const payload = {
         jobTitle: selectedJob.title,
         jobId: selectedJob.id,
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
+        firstName: formData.firstName.trim(),
+        lastName: formData.lastName.trim(),
+        email: formData.email.toLowerCase().trim(),
         countryCode: formData.countryCode,
-        phone: formData.phone,
-        country: formData.country,
-        city: formData.city,
+        phone: cleanPhone,
+        country: formData.country.trim(),
+        city: formData.city.trim(),
         resumeName: file.name,
-        coverLetter: formData.coverLetter,
-        githubUrl: formData.githubUrl,
-        linkedinUrl: formData.linkedinUrl
+        coverLetter: formData.coverLetter ? formData.coverLetter.trim() : '',
+        githubUrl: formData.githubUrl ? formData.githubUrl.trim() : '',
+        linkedinUrl: formData.linkedinUrl ? formData.linkedinUrl.trim() : ''
       };
 
-      const response = await fetch('/api/apply', {
+      const response = await fetch(`${API_BASE_URL}/api/apply`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

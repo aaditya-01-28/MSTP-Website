@@ -243,8 +243,8 @@ const ConsultationsTab = () => {
                           className="btn-sm btn-edit" 
                           onClick={() => {
                             setReplyConsultation(item);
-                            setReplySubject(`Re: Consultation Booking for ${item.service || 'our services'} - WhiteCircle Group`);
-                            setReplyMessage(`Hi ${item.name},\n\nThank you for booking a consultation with WhiteCircle Group regarding ${item.service || 'our services'}.\n\nWe would like to schedule a call with you. Please let us know your available time slots.\n\nBest regards,\nWhiteCircle Group Team`);
+                            setReplySubject(`Re: Consultation Booking for ${item.service || 'our services'} - MAATRSHRI Group`);
+                            setReplyMessage(`Hi ${item.name},\n\nThank you for booking a consultation with MAATRSHRI Group regarding ${item.service || 'our services'}.\n\nWe would like to schedule a call with you. Please let us know your available time slots.\n\nBest regards,\nMAATRSHRI Group Team`);
                           }} 
                           title="Reply via Email"
                         >
@@ -359,8 +359,8 @@ const ConsultationsTab = () => {
                   const item = selectedConsultation;
                   setSelectedConsultation(null);
                   setReplyConsultation(item);
-                  setReplySubject(`Re: Consultation Booking for ${item.service || 'our services'} - WhiteCircle Group`);
-                  setReplyMessage(`Hi ${item.name},\n\nThank you for booking a consultation with WhiteCircle Group regarding ${item.service || 'our services'}.\n\nWe would like to schedule a call with you. Please let us know your available time slots.\n\nBest regards,\nWhiteCircle Group Team`);
+                  setReplySubject(`Re: Consultation Booking for ${item.service || 'our services'} - MAATRSHRI Group`);
+                  setReplyMessage(`Hi ${item.name},\n\nThank you for booking a consultation with MAATRSHRI Group regarding ${item.service || 'our services'}.\n\nWe would like to schedule a call with you. Please let us know your available time slots.\n\nBest regards,\nMAATRSHRI Group Team`);
                 }}
               >
                 Reply to Client

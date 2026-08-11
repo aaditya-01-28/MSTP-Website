@@ -47,26 +47,30 @@ const HR_EMAIL = process.env.EMAIL_USER;
 // Helper function to send email notification to HR and confirmation to User
 const sendEmails = async (res, userEmail, userName, hrSubject, hrBody, userSubject, userBody, successMessage) => {
   try {
-    // 1. Send notification to HR
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: HR_EMAIL,
-      subject: hrSubject,
-      text: hrBody
-    });
+    if (cleanEmailUser && cleanEmailPass) {
+      // 1. Send notification to HR
+      await transporter.sendMail({
+        from: cleanEmailUser,
+        to: HR_EMAIL || cleanEmailUser,
+        subject: hrSubject,
+        text: hrBody
+      });
 
-    // 2. Send confirmation to User
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: userEmail,
-      subject: userSubject,
-      text: userBody
-    });
+      // 2. Send confirmation to User
+      if (userEmail) {
+        await transporter.sendMail({
+          from: cleanEmailUser,
+          to: userEmail,
+          subject: userSubject,
+          text: userBody
+        });
+      }
+    }
 
-    res.status(200).json({ message: successMessage });
+    return res.status(200).json({ success: true, message: successMessage });
   } catch (error) {
-    console.error('Email sending error:', error);
-    res.status(500).json({ error: 'Failed to send email. Please try again later.' });
+    console.error('Email sending error (non-fatal, record saved in DB):', error.message || error);
+    return res.status(200).json({ success: true, message: successMessage });
   }
 };
 
@@ -83,21 +87,37 @@ app.post('/api/contact', async (req, res) => {
     return res.status(400).json({ error: 'Name, email, and message are required.' });
   }
 
+  const nameRegex = /^[a-zA-Z\s.'-]+$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!nameRegex.test(name.trim())) {
+    return res.status(400).json({ error: 'Please enter a valid Name without numbers or special characters.' });
+  }
+
+  if (!emailRegex.test(email.trim())) {
+    return res.status(400).json({ error: 'Please enter a valid Email address.' });
+  }
+
   try {
-    const newContact = new Contact({ name, email, subject, message });
+    const newContact = new Contact({ 
+      name: name.trim(), 
+      email: email.toLowerCase().trim(), 
+      subject: subject ? subject.trim() : 'General Inquiry', 
+      message: message.trim() 
+    });
     await newContact.save();
-    console.log("Saved to DB");
+    console.log("Contact query saved to DB:", name);
 
-    const hrSubject = `New Contact Query: ${subject || 'General Inquiry'}`;
-    const hrBody = `You have received a new contact submission.\n\nName: ${name}\nEmail: ${email}\nSubject: ${subject}\nMessage: ${message}`;
+    const hrSubject = `New Contact Query: ${subject || 'General Inquiry'} from ${name}`;
+    const hrBody = `You have received a new contact submission.\n\nName: ${name}\nEmail: ${email}\nSubject: ${subject || 'General Inquiry'}\nMessage: ${message}`;
     
-    const userSubject = 'We have received your message - WhiteCircle Group';
-    const userBody = `Hi ${name},\n\nThank you for reaching out to us. We have received your message and our team will get back to you shortly.\n\nBest regards,\nWhiteCircle Group`;
+    const userSubject = 'We have received your message - MAATRSHRI Group';
+    const userBody = `Hi ${name},\n\nThank you for reaching out to MAATRSHRI Group. We have received your message and our team will get back to you shortly.\n\nBest regards,\nMAATRSHRI Group`;
 
-    await sendEmails(res, email, name, hrSubject, hrBody, userSubject, userBody, 'Saved to MongoDB and emails sent. Thank you for reaching out!');
+    await sendEmails(res, email, name, hrSubject, hrBody, userSubject, userBody, 'Thank you! Your message has been sent successfully.');
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: 'Database or Email error ❌' });
+    console.error('Contact error:', error);
+    res.status(500).json({ error: 'Failed to process contact request. Please try again.' });
   }
 });
 
@@ -113,29 +133,45 @@ app.post('/api/book', async (req, res) => {
     return res.status(400).json({ error: 'Name, email, and phone number are required.' });
   }
 
+  const nameRegex = /^[a-zA-Z\s.'-]+$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const cleanPhone = phone ? phone.replace(/[\s-]/g, '') : '';
+
+  if (!nameRegex.test(name.trim())) {
+    return res.status(400).json({ error: 'Please enter a valid Name without numbers or special characters.' });
+  }
+
+  if (!emailRegex.test(email.trim())) {
+    return res.status(400).json({ error: 'Please enter a valid Email address.' });
+  }
+
+  if (!/^[0-9]{7,15}$/.test(cleanPhone)) {
+    return res.status(400).json({ error: 'Please enter a valid Phone Number containing only 7 to 15 digits.' });
+  }
+
   try {
     const newConsultation = new Consultation({
-      name,
-      email,
-      phone,
-      company: company || '',
+      name: name.trim(),
+      email: email.toLowerCase().trim(),
+      phone: phone.trim(),
+      company: company ? company.trim() : '',
       service: selectedService,
       date: date || new Date().toISOString().split('T')[0],
-      requirements: requirements || ''
+      requirements: requirements ? requirements.trim() : ''
     });
     await newConsultation.save();
-    console.log("Consultation saved to DB");
+    console.log("Consultation saved to DB:", name, selectedService);
 
     const hrSubject = `New Consultation Booking: ${selectedService} from ${name}`;
     const hrBody = `New consultancy booking received.\n\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nCompany: ${company || 'N/A'}\nService: ${selectedService}\nPreferred Date: ${date || 'Flexible'}\nRequirements: ${requirements || 'None'}`;
     
-    const userSubject = 'Consultation Booking Confirmation - WhiteCircle Group';
-    const userBody = `Hi ${name},\n\nYour consultation booking for "${selectedService}" has been received. Our team will review your request and contact you shortly to confirm the time.\n\nBest regards,\nWhiteCircle Group`;
+    const userSubject = 'Consultation Booking Confirmation - MAATRSHRI Group';
+    const userBody = `Hi ${name},\n\nYour consultation booking for "${selectedService}" has been received. Our team will review your request and contact you shortly to confirm the time.\n\nBest regards,\nMAATRSHRI Group`;
 
     await sendEmails(res, email, name, hrSubject, hrBody, userSubject, userBody, 'Your consultation has been booked successfully! We will contact you soon.');
   } catch (error) {
     console.error('Error saving consultation:', error);
-    res.status(500).json({ error: 'Database or Email error ❌' });
+    res.status(500).json({ error: 'Failed to process consultation booking. Please try again.' });
   }
 });
 
@@ -154,36 +190,82 @@ app.post('/api/apply', async (req, res) => {
     return res.status(400).json({ error: 'First Name, Last Name, Email, Phone, Country, City, and Job Title are required.' });
   }
 
+  // Regex validation against special characters
+  const nameRegex = /^[a-zA-Z\s.'-]+$/;
+  const cityRegex = /^[a-zA-Z\s.'-]+$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const cleanPhone = phone ? phone.toString().replace(/[\s-]/g, '') : '';
+
+  if (!nameRegex.test(firstName.trim())) {
+    return res.status(400).json({ error: 'Please enter a valid First Name without numbers or special characters.' });
+  }
+
+  if (!nameRegex.test(lastName.trim())) {
+    return res.status(400).json({ error: 'Please enter a valid Last Name without numbers or special characters.' });
+  }
+
+  if (!emailRegex.test(email.trim())) {
+    return res.status(400).json({ error: 'Please enter a valid Email address.' });
+  }
+
+  if (!/^[0-9]{7,15}$/.test(cleanPhone)) {
+    return res.status(400).json({ error: 'Please enter a valid Phone Number containing only 7 to 15 digits.' });
+  }
+
+  if (!cityRegex.test(city.trim())) {
+    return res.status(400).json({ error: 'Please enter a valid City name without numbers or special characters.' });
+  }
+
+  if (!nameRegex.test(country.trim())) {
+    return res.status(400).json({ error: 'Please enter a valid Country name without numbers or special characters.' });
+  }
+
   try {
+    // 0. Prevent duplicate application for the same job by the same email
+    const trimmedEmail = email.toLowerCase().trim();
+    const existingApp = await Application.findOne({
+      email: trimmedEmail,
+      $or: [
+        { jobId: jobId ? String(jobId) : '___none___' },
+        { jobTitle: jobTitle ? jobTitle.trim() : '___none___' }
+      ]
+    });
+
+    if (existingApp) {
+      return res.status(400).json({ 
+        error: 'You have already applied for this job with this email address.' 
+      });
+    }
+
     // 1. Save to Database
     const newApp = new Application({
-      jobTitle,
-      jobId,
-      firstName,
-      lastName,
-      email,
+      jobTitle: jobTitle.trim(),
+      jobId: jobId || '',
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
+      email: trimmedEmail,
       countryCode: countryCode || '+91',
-      phone,
-      country,
-      city,
+      phone: phone.toString().trim(),
+      country: country.trim(),
+      city: city.trim(),
       resumeName: resumeName || 'Resume.pdf',
-      coverLetter,
-      githubUrl,
-      linkedinUrl
+      coverLetter: coverLetter ? coverLetter.trim() : '',
+      githubUrl: githubUrl ? githubUrl.trim() : '',
+      linkedinUrl: linkedinUrl ? linkedinUrl.trim() : ''
     });
 
     await newApp.save();
     console.log("Job Application saved to DB:", firstName, lastName, jobTitle);
 
     // 2. Prepare Emails
-    const candidateName = `${firstName} ${lastName}`;
+    const candidateName = `${firstName.trim()} ${lastName.trim()}`;
     const fullPhone = `${countryCode || '+91'} ${phone}`;
 
     const hrSubject = `New Job Application: ${jobTitle} from ${candidateName}`;
     const hrBody = `You have received a new job application.\n\n` +
       `Position: ${jobTitle} (ID: ${jobId || 'N/A'})\n` +
       `Candidate Name: ${candidateName}\n` +
-      `Email: ${email}\n` +
+      `Email: ${trimmedEmail}\n` +
       `Phone: ${fullPhone}\n` +
       `Location: ${city}, ${country}\n` +
       `Resume File: ${resumeName || 'Attached/Uploaded'}\n` +
@@ -199,14 +281,14 @@ app.post('/api/apply', async (req, res) => {
       `Application Summary:\n` +
       `- Position: ${jobTitle}\n` +
       `- Name: ${candidateName}\n` +
-      `- Email: ${email}\n` +
+      `- Email: ${trimmedEmail}\n` +
       `- Contact: ${fullPhone}\n` +
       `- Location: ${city}, ${country}\n\n` +
       `Best regards,\n` +
       `HR & Recruitment Team\n` +
       `MAATRSHRI Group`;
 
-    await sendEmails(res, email, candidateName, hrSubject, hrBody, userSubject, userBody, 'Application submitted successfully! A confirmation email has been sent.');
+    await sendEmails(res, trimmedEmail, candidateName, hrSubject, hrBody, userSubject, userBody, 'Application submitted successfully! A confirmation email has been sent.');
   } catch (error) {
     console.error("Application error:", error);
     res.status(500).json({ error: 'Failed to process application. Please try again later.' });

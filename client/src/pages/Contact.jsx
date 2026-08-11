@@ -20,6 +20,29 @@ const Contact = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage('');
+
+    const nameRegex = /^[a-zA-Z\s.'-]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!formData.name.trim() || !nameRegex.test(formData.name.trim())) {
+      setStatus('error');
+      setErrorMessage('Please enter a valid Name without numbers or special characters.');
+      return;
+    }
+
+    if (!formData.email.trim() || !emailRegex.test(formData.email.trim())) {
+      setStatus('error');
+      setErrorMessage('Please enter a valid Email address.');
+      return;
+    }
+
+    if (!formData.message.trim()) {
+      setStatus('error');
+      setErrorMessage('Please enter your message.');
+      return;
+    }
+
     setStatus('submitting');
     
     try {
@@ -28,7 +51,12 @@ const Contact = () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          email: formData.email.toLowerCase().trim(),
+          subject: formData.subject ? formData.subject.trim() : 'General Inquiry',
+          message: formData.message.trim()
+        })
       });
       
       const data = await response.json();
