@@ -511,12 +511,16 @@ app.post('/api/admin/bulk-reply', authMiddleware, async (req, res) => {
 app.use('/api', require('./routes/contentRoutes'));
 
 // ✅ SERVE FRONTEND (IMPORTANT)
-const __dirnamePath = path.resolve();
-
-app.use(express.static(path.join(__dirnamePath, "../client/dist")));
+const clientDistPath = path.join(__dirname, "../client/dist");
+app.use(express.static(clientDistPath));
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirnamePath, "../client/dist/index.html"));
+  const indexPath = path.join(clientDistPath, "index.html");
+  res.sendFile(indexPath, (err) => {
+    if (err) {
+      res.status(200).send("API is running. (Frontend dist not found)");
+    }
+  });
 });
 
 // ✅ START SERVER (MUST BE LAST)
